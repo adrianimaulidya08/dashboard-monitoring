@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard Monitoring Progres — SDI KOTA PALU</title>
+  <title>Dashboard Monitoring Progres — SDI Kota Palu</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
@@ -370,7 +370,7 @@
     <div class="sidebar-brand">
       <div class="brand-logo">📊</div>
       <div class="brand-name">Dashboard Monitoring<br>Progres Kelurahan</div>
-      <div class="brand-sub">Sdi Kota Palu</div>
+      <div class="brand-sub">BPS Kota Palu</div>
       <div class="brand-pill">MONEV KELURAHAN</div>
     </div>
 
@@ -451,7 +451,7 @@
     <div class="topbar">
       <div class="topbar-left">
         <h1>Monitoring Progres Kelurahan</h1>
-        <p>Sdi Kota Palu</p>
+        <p>SDI KOTA PALU </p>
       </div>
       <div class="topbar-right">
         <div class="topbar-sync">
@@ -530,7 +530,7 @@ let allData = [], filtered = [];
 let chKec = null, chKat = null;
 
 async function fetchSheet(cfg) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(cfg.name)}`;
+  const url = `https://docs.google.com/spreadsheets/d/1lF4TFpI_rfwqirD_HAIYxZgPcPWANaRPVXZM9luLRt8/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(cfg.name)}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Gagal mengambil sheet "${cfg.name}"`);
   const txt = await res.text();
