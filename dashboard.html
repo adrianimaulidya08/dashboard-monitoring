@@ -370,13 +370,6 @@ async function downloadPDF() {
   btn.disabled = true;
   overlay.classList.add('show');
 
-  // Pastikan sidebar terbuka saat capture
-  const wasCollapsed = document.body.classList.contains('collapsed');
-  if (wasCollapsed) {
-    document.body.classList.remove('collapsed');
-    await new Promise(r => setTimeout(r, 350));
-  }
-
   try {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
@@ -395,17 +388,15 @@ async function downloadPDF() {
 
     // ── HEADER BAR ──
     pdf.setFillColor(21, 88, 168);
-    pdf.roundedRect(0, 0, W, 28, 0, 0, 'F');
-
-    // Orange accent line
+    pdf.rect(0, 0, W, 28, 'F');
     pdf.setFillColor(244, 123, 32);
     pdf.rect(0, 28, W, 3, 'F');
 
     // Logo box
     pdf.setFillColor(244, 123, 32);
     pdf.roundedRect(10, 5, 18, 18, 3, 3, 'F');
+    pdf.setFontSize(13); pdf.setFont('helvetica', 'bold');
     pdf.setTextColor(255, 255, 255);
-    pdf.setFontSize(14); pdf.setFont('helvetica', 'bold');
     pdf.text('B', 19, 17, { align: 'center' });
 
     // Title
@@ -416,24 +407,20 @@ async function downloadPDF() {
     pdf.setTextColor(180, 200, 230);
     pdf.text('SDI Kota Palu  |  BPS Kota Palu', 32, 21);
 
-    // Date on right
-    pdf.setFontSize(7.5); pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(180, 200, 230);
-    pdf.text(`Dicetak: ${now}`, W - 12, 13, { align: 'right' });
+    // Date
+    pdf.setFontSize(7.5);
+    pdf.text('Dicetak: ' + now, W - 12, 13, { align: 'right' });
 
     // ── FILTER INFO BAR ──
     pdf.setFillColor(255, 255, 255);
-    pdf.roundedRect(10, 35, W - 20, 12, 2, 2, 'F');
     pdf.setDrawColor(228, 234, 242);
     pdf.setLineWidth(0.3);
-    pdf.roundedRect(10, 35, W - 20, 12, 2, 2, 'S');
+    pdf.roundedRect(10, 35, W - 20, 11, 2, 2, 'FD');
 
-    pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(7.5); pdf.setFont('helvetica', 'bold');
     pdf.setTextColor(21, 88, 168);
-    pdf.text('FILTER AKTIF', 16, 43);
+    pdf.text('FILTER AKTIF', 16, 42);
 
-    pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(61, 82, 107);
     const filters = [
       { label: 'Tahun', val: tahun },
       { label: 'Kecamatan', val: kec },
@@ -441,69 +428,110 @@ async function downloadPDF() {
       { label: 'Kategori', val: kat },
     ];
     let fx = 52;
-    filters.forEach((f, i) => {
-      // pill bg
-      const txt = `${f.label}: ${f.val}`;
+    filters.forEach(f => {
+      const txt = f.label + ': ' + f.val;
       const tw = pdf.getTextWidth(txt) + 6;
       pdf.setFillColor(230, 239, 249);
-      pdf.roundedRect(fx, 37.5, tw, 7, 1.5, 1.5, 'F');
+      pdf.roundedRect(fx, 37.5, tw, 6, 1.5, 1.5, 'F');
+      pdf.setFont('helvetica', 'normal');
       pdf.setTextColor(21, 88, 168);
       pdf.setFontSize(7.5);
-      pdf.text(txt, fx + 3, 43);
+      pdf.text(txt, fx + 3, 42);
       fx += tw + 4;
     });
 
-    // ── CAPTURE CHARTS ──
-    const chartCards = document.querySelectorAll('.chart-card');
+    // ── CHART TITLES ──
+    const titleY = 50;
+    pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor(13, 27, 46);
 
-    // Card shadow bg chart 1
-    const c1x = 10, c1y = 51, c1w = (W - 26) * 0.57;
+    const c1x = 10, c1y = 54;
+    const c1w = (W - 26) * 0.57;
+    const c2x = c1x + c1w + 6, c2y = 54;
+    const c2w = W - c2x - 10;
+    const cardH = H - c1y - 10;
+
+    // Card backgrounds
     pdf.setFillColor(255, 255, 255);
     pdf.setDrawColor(228, 234, 242);
     pdf.setLineWidth(0.4);
-    pdf.roundedRect(c1x, c1y, c1w, H - c1y - 12, 4, 4, 'FD');
+    pdf.roundedRect(c1x, c1y, c1w, cardH, 4, 4, 'FD');
+    pdf.roundedRect(c2x, c2y, c2w, cardH, 4, 4, 'FD');
 
-    // Card bg chart 2
-    const c2x = c1x + c1w + 6, c2y = 51, c2w = W - c2x - 10;
-    pdf.roundedRect(c2x, c2y, c2w, H - c2y - 12, 4, 4, 'FD');
+    // Card top accent line
+    pdf.setFillColor(244, 123, 32);
+    pdf.roundedRect(c1x, c1y, c1w, 1.5, 0, 0, 'F');
+    pdf.setFillColor(30, 158, 88);
+    pdf.roundedRect(c2x, c2y, c2w, 1.5, 0, 0, 'F');
 
-    // Capture & embed chart 1
-    const canvas1 = await html2canvas(chartCards[0], {
-      scale: 2.5,
-      backgroundColor: '#ffffff',
-      logging: false,
-      useCORS: true,
-    });
-    const img1H = c1w * (canvas1.height / canvas1.width) * 0.88;
-    pdf.addImage(canvas1.toDataURL('image/png'), 'PNG', c1x + 2, c1y + 2, c1w - 4, Math.min(img1H, H - c1y - 16));
+    // Card title text
+    pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor(13, 27, 46);
+    pdf.text('Progres per Kecamatan', c1x + 5, c1y + 8);
+    pdf.text('Progres per Kategori', c2x + 5, c2y + 8);
 
-    // Capture & embed chart 2
-    const canvas2 = await html2canvas(chartCards[1], {
-      scale: 2.5,
-      backgroundColor: '#ffffff',
-      logging: false,
-      useCORS: true,
-    });
-    const img2H = c2w * (canvas2.height / canvas2.width) * 0.88;
-    pdf.addImage(canvas2.toDataURL('image/png'), 'PNG', c2x + 2, c2y + 2, c2w - 4, Math.min(img2H, H - c2y - 16));
+    pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
+    pdf.setTextColor(138, 157, 184);
+    pdf.text('Rata-rata persentase progres pengisian tiap kecamatan', c1x + 5, c1y + 13);
+    pdf.text('Rata-rata progres berdasarkan kategori data', c2x + 5, c2y + 13);
+
+    // ── GRAB CHART CANVAS DIRECTLY ──
+    // This is the key fix: use the canvas element directly, not html2canvas
+    const canvas1 = document.getElementById('cKec');
+    const canvas2 = document.getElementById('cKat');
+
+    const imgArea1H = cardH - 18;
+    const imgArea2H = cardH - 18;
+
+    // Chart 1 image from canvas
+    const img1Data = canvas1.toDataURL('image/png', 1.0);
+    const img1NatW = canvas1.width, img1NatH = canvas1.height;
+    const img1W = c1w - 8;
+    const img1H = Math.min(img1W * (img1NatH / img1NatW), imgArea1H);
+    pdf.addImage(img1Data, 'PNG', c1x + 4, c1y + 16, img1W, img1H);
+
+    // Chart 2 image from canvas
+    const img2Data = canvas2.toDataURL('image/png', 1.0);
+    const img2NatW = canvas2.width, img2NatH = canvas2.height;
+    const img2W = c2w - 8;
+    const img2H = Math.min(img2W * (img2NatH / img2NatW), imgArea2H);
+    pdf.addImage(img2Data, 'PNG', c2x + 4, c2y + 16, img2W, img2H);
+
+    // ── LEGEND chart 1 ──
+    const legY = c1y + 16 + img1H + 3;
+    if (legY < c1y + cardH - 4) {
+      const legends = [
+        { color: [30,158,88],  label: '>= 100%' },
+        { color: [21,88,168],  label: '75-99%'  },
+        { color: [244,123,32], label: '50-74%'  },
+        { color: [230,57,70],  label: '< 50%'   },
+      ];
+      let lx = c1x + 5;
+      legends.forEach(lg => {
+        pdf.setFillColor(...lg.color);
+        pdf.roundedRect(lx, legY, 4, 4, 1, 1, 'F');
+        pdf.setFontSize(6.5); pdf.setFont('helvetica','normal');
+        pdf.setTextColor(61, 82, 107);
+        pdf.text(lg.label, lx + 5.5, legY + 3.2);
+        lx += pdf.getTextWidth(lg.label) + 10;
+      });
+    }
 
     // ── FOOTER ──
     pdf.setFillColor(21, 88, 168);
-    pdf.rect(0, H - 8, W, 8, 'F');
+    pdf.rect(0, H - 7, W, 7, 'F');
     pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(180, 200, 230);
-    pdf.text('BPS Kota Palu  •  Dashboard Monitoring Progres Kelurahan  •  Data Real-time dari Google Sheets', W / 2, H - 3, { align: 'center' });
+    pdf.text('BPS Kota Palu  •  Dashboard Monitoring Progres Kelurahan  •  Data Real-time dari Google Sheets', W / 2, H - 2.5, { align: 'center' });
 
     // ── SAVE ──
-    const filename = `Monitoring_Progres_${tahun}_Kec-${kec}.pdf`;
+    const filename = 'Monitoring_Progres_' + tahun + '_Kec-' + kec + '.pdf';
     pdf.save(filename);
 
   } catch(e) {
     alert('Gagal membuat PDF: ' + e.message);
     console.error(e);
   } finally {
-    // Kembalikan state sidebar
-    if (wasCollapsed) document.body.classList.add('collapsed');
     btn.disabled = false;
     overlay.classList.remove('show');
   }
