@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard Monitoring Progres — SDI KOTA PALU</title>
+  <title>Dashboard Monitoring Progres — SDI Kota Palu</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -137,6 +139,38 @@
     .loader-label { font-size:13px; font-weight:600; color:var(--text2); }
     .loader-sub   { font-size:11px; color:var(--text3); margin-top:-8px; }
 
+
+    /* DOWNLOAD PDF BUTTON */
+    .btn-pdf {
+      background: linear-gradient(135deg, var(--orange), #e55e00);
+      color: #fff; border: none; border-radius: var(--r-sm);
+      padding: 8px 16px; font-size: 12px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+      font-family: 'Sora', sans-serif; transition: all .15s;
+      box-shadow: 0 4px 12px rgba(244,123,32,.35);
+    }
+    .btn-pdf:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(244,123,32,.45); }
+    .btn-pdf:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    /* PDF OVERLAY */
+    #pdf-overlay {
+      position: fixed; inset: 0;
+      background: rgba(13,27,46,.7);
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999; gap: 16px;
+      backdrop-filter: blur(4px);
+    }
+    #pdf-overlay.show { display: flex; }
+    .pdf-spinner {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 4px solid rgba(255,255,255,.2);
+      border-top-color: var(--orange);
+      animation: spin .8s linear infinite;
+    }
+    .pdf-text { font-size: 13px; font-weight: 600; color: #fff; }
+    .pdf-sub  { font-size: 11px; color: rgba(255,255,255,.6); margin-top: -8px; }
+
     footer { text-align:center; padding:14px; font-size:11px; color:var(--text3); font-weight:600; border-top:1px solid var(--border); background:var(--surface); }
     footer b { color:var(--orange); }
   </style>
@@ -252,6 +286,12 @@
           <div class="sync-dot" id="syncDot"></div>
           <span id="lastSync">Menghubungkan...</span>
         </div>
+        <button class="btn-pdf" onclick="downloadPDF()" id="btnPdf">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download PDF
+        </button>
         <button class="btn-refresh" onclick="loadAllData()">
           <svg id="refreshIcon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
@@ -297,7 +337,7 @@
   </div>
 </div>
 
-<footer><b>SDI KOTA PALU</b> &nbsp;•&nbsp; Dashboard Monitoring Progres Kelurahan &nbsp;•&nbsp; 2026</footer>
+<footer><b>BPS Kota Palu</b> &nbsp;•&nbsp; Dashboard Monitoring Progres Kelurahan &nbsp;•&nbsp; Real-time dari Google Sheets</footer>
 
 <script>
 const SHEET_ID = '1lF4TFpI_rfwqirD_HAIYxZgPcPWANaRPVXZM9luLRt8';
@@ -321,6 +361,79 @@ const CATEGORIES = [
 
 let allData = [], filtered = [];
 let chKec = null, chKat = null;
+
+
+// ── DOWNLOAD PDF ─────────────────────────────
+async function downloadPDF() {
+  const btn = document.getElementById('btnPdf');
+  const overlay = document.getElementById('pdf-overlay');
+  btn.disabled = true;
+  overlay.classList.add('show');
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    const W = pdf.internal.pageSize.getWidth();
+    const H = pdf.internal.pageSize.getHeight();
+
+    // ── HEADER ──
+    pdf.setFillColor(21, 88, 168);
+    pdf.rect(0, 0, W, 22, 'F');
+    pdf.setFillColor(244, 123, 32);
+    pdf.rect(0, 22, W, 2, 'F');
+
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(14); pdf.setFont('helvetica','bold');
+    pdf.text('Dashboard Monitoring Progres Kelurahan', 14, 11);
+    pdf.setFontSize(8); pdf.setFont('helvetica','normal');
+    pdf.text('SDI Kota Palu  |  BPS Kota Palu', 14, 17);
+
+    // Filter info
+    const tahun = document.getElementById('fTahun').value || 'Semua';
+    const kec   = document.getElementById('fKec').value   || 'Semua';
+    const kel   = document.getElementById('fKel').value   || 'Semua';
+    const kat   = document.getElementById('fKat').value   || 'Semua';
+    const now   = new Date().toLocaleString('id-ID');
+    const filterTxt = `Tahun: ${tahun}  |  Kecamatan: ${kec}  |  Kelurahan: ${kel}  |  Kategori: ${kat}  |  Dicetak: ${now}`;
+    pdf.setTextColor(255,255,255);
+    pdf.setFontSize(7);
+    pdf.text(filterTxt, W - 14, 17, { align: 'right' });
+
+    // ── CAPTURE CHARTS ──
+    const chartCards = document.querySelectorAll('.chart-card');
+
+    // Chart 1
+    const c1 = await html2canvas(chartCards[0], { scale: 2, backgroundColor: '#ffffff', logging: false });
+    const c1w = (W / 2) - 18;
+    const c1h = c1w * (c1.height / c1.width);
+    pdf.addImage(c1.toDataURL('image/png'), 'PNG', 12, 28, c1w, c1h);
+
+    // Chart 2
+    const c2 = await html2canvas(chartCards[1], { scale: 2, backgroundColor: '#ffffff', logging: false });
+    const c2w = (W / 2) - 18;
+    const c2h = c2w * (c2.height / c2.width);
+    pdf.addImage(c2.toDataURL('image/png'), 'PNG', (W / 2) + 6, 28, c2w, c2h);
+
+    // ── FOOTER ──
+    const footerY = H - 6;
+    pdf.setDrawColor(228, 234, 242);
+    pdf.line(12, footerY - 4, W - 12, footerY - 4);
+    pdf.setTextColor(138, 157, 184);
+    pdf.setFontSize(7); pdf.setFont('helvetica','normal');
+    pdf.text('SDI KOTA PALU  •  Dashboard Monitoring Progres Kelurahan  •  2026', W/2, footerY, { align: 'center' });
+
+    // ── SAVE ──
+    const filename = `Monitoring_Progres_${tahun}_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.pdf`;
+    pdf.save(filename);
+
+  } catch(e) {
+    alert('Gagal membuat PDF: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    overlay.classList.remove('show');
+  }
+}
 
 // ── TOGGLE SIDEBAR ──────────────────────────
 function toggleSidebar() {
@@ -552,5 +665,12 @@ function showErr(msg) {
 window.addEventListener('DOMContentLoaded', loadAllData);
 setInterval(loadAllData, 5 * 60 * 1000);
 </script>
+<!-- PDF OVERLAY -->
+<div id="pdf-overlay">
+  <div class="pdf-spinner"></div>
+  <div class="pdf-text">Membuat PDF...</div>
+  <div class="pdf-sub">Mohon tunggu sebentar</div>
+</div>
+
 </body>
 </html>
