@@ -452,7 +452,7 @@
     <div class="topbar">
       <div class="topbar-left">
         <h1>Monitoring Progres Kelurahan</h1>
-        <p>Badan Pusat Statistik Kota Palu — Data tahun 2024, 2025, 2026</p>
+        <p>Badan Pusat Statistik Kota Palu </p>
       </div>
       <div class="topbar-right">
         <div class="topbar-sync">
@@ -531,7 +531,7 @@ let allData = [], filtered = [];
 let chKec = null, chKat = null;
 
 async function fetchSheet(cfg) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(cfg.name)}`;
+  const url = `https://docs.google.com/spreadsheets/d/1lF4TFpI_rfwqirD_HAIYxZgPcPWANaRPVXZM9luLRt8/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(cfg.name)}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Gagal mengambil sheet "${cfg.name}"`);
   const txt = await res.text();
