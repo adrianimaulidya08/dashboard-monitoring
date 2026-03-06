@@ -370,66 +370,140 @@ async function downloadPDF() {
   btn.disabled = true;
   overlay.classList.add('show');
 
+  // Pastikan sidebar terbuka saat capture
+  const wasCollapsed = document.body.classList.contains('collapsed');
+  if (wasCollapsed) {
+    document.body.classList.remove('collapsed');
+    await new Promise(r => setTimeout(r, 350));
+  }
+
   try {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
     const W = pdf.internal.pageSize.getWidth();
     const H = pdf.internal.pageSize.getHeight();
 
-    // ── HEADER ──
-    pdf.setFillColor(21, 88, 168);
-    pdf.rect(0, 0, W, 22, 'F');
-    pdf.setFillColor(244, 123, 32);
-    pdf.rect(0, 22, W, 2, 'F');
-
-    pdf.setTextColor(255, 255, 255);
-    pdf.setFontSize(14); pdf.setFont('helvetica','bold');
-    pdf.text('Dashboard Monitoring Progres Kelurahan', 14, 11);
-    pdf.setFontSize(8); pdf.setFont('helvetica','normal');
-    pdf.text('SDI Kota Palu  |  BPS Kota Palu', 14, 17);
-
-    // Filter info
     const tahun = document.getElementById('fTahun').value || 'Semua';
     const kec   = document.getElementById('fKec').value   || 'Semua';
     const kel   = document.getElementById('fKel').value   || 'Semua';
     const kat   = document.getElementById('fKat').value   || 'Semua';
-    const now   = new Date().toLocaleString('id-ID');
-    const filterTxt = `Tahun: ${tahun}  |  Kecamatan: ${kec}  |  Kelurahan: ${kel}  |  Kategori: ${kat}  |  Dicetak: ${now}`;
-    pdf.setTextColor(255,255,255);
-    pdf.setFontSize(7);
-    pdf.text(filterTxt, W - 14, 17, { align: 'right' });
+    const now   = new Date().toLocaleString('id-ID', {day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+    // ── BACKGROUND ──
+    pdf.setFillColor(240, 244, 249);
+    pdf.rect(0, 0, W, H, 'F');
+
+    // ── HEADER BAR ──
+    pdf.setFillColor(21, 88, 168);
+    pdf.roundedRect(0, 0, W, 28, 0, 0, 'F');
+
+    // Orange accent line
+    pdf.setFillColor(244, 123, 32);
+    pdf.rect(0, 28, W, 3, 'F');
+
+    // Logo box
+    pdf.setFillColor(244, 123, 32);
+    pdf.roundedRect(10, 5, 18, 18, 3, 3, 'F');
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(14); pdf.setFont('helvetica', 'bold');
+    pdf.text('B', 19, 17, { align: 'center' });
+
+    // Title
+    pdf.setFontSize(15); pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor(255, 255, 255);
+    pdf.text('Dashboard Monitoring Progres Kelurahan', 32, 13);
+    pdf.setFontSize(8); pdf.setFont('helvetica', 'normal');
+    pdf.setTextColor(180, 200, 230);
+    pdf.text('SDI Kota Palu  |  BPS Kota Palu', 32, 21);
+
+    // Date on right
+    pdf.setFontSize(7.5); pdf.setFont('helvetica', 'normal');
+    pdf.setTextColor(180, 200, 230);
+    pdf.text(`Dicetak: ${now}`, W - 12, 13, { align: 'right' });
+
+    // ── FILTER INFO BAR ──
+    pdf.setFillColor(255, 255, 255);
+    pdf.roundedRect(10, 35, W - 20, 12, 2, 2, 'F');
+    pdf.setDrawColor(228, 234, 242);
+    pdf.setLineWidth(0.3);
+    pdf.roundedRect(10, 35, W - 20, 12, 2, 2, 'S');
+
+    pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor(21, 88, 168);
+    pdf.text('FILTER AKTIF', 16, 43);
+
+    pdf.setFont('helvetica', 'normal');
+    pdf.setTextColor(61, 82, 107);
+    const filters = [
+      { label: 'Tahun', val: tahun },
+      { label: 'Kecamatan', val: kec },
+      { label: 'Kelurahan', val: kel },
+      { label: 'Kategori', val: kat },
+    ];
+    let fx = 52;
+    filters.forEach((f, i) => {
+      // pill bg
+      const txt = `${f.label}: ${f.val}`;
+      const tw = pdf.getTextWidth(txt) + 6;
+      pdf.setFillColor(230, 239, 249);
+      pdf.roundedRect(fx, 37.5, tw, 7, 1.5, 1.5, 'F');
+      pdf.setTextColor(21, 88, 168);
+      pdf.setFontSize(7.5);
+      pdf.text(txt, fx + 3, 43);
+      fx += tw + 4;
+    });
 
     // ── CAPTURE CHARTS ──
     const chartCards = document.querySelectorAll('.chart-card');
 
-    // Chart 1
-    const c1 = await html2canvas(chartCards[0], { scale: 2, backgroundColor: '#ffffff', logging: false });
-    const c1w = (W / 2) - 18;
-    const c1h = c1w * (c1.height / c1.width);
-    pdf.addImage(c1.toDataURL('image/png'), 'PNG', 12, 28, c1w, c1h);
+    // Card shadow bg chart 1
+    const c1x = 10, c1y = 51, c1w = (W - 26) * 0.57;
+    pdf.setFillColor(255, 255, 255);
+    pdf.setDrawColor(228, 234, 242);
+    pdf.setLineWidth(0.4);
+    pdf.roundedRect(c1x, c1y, c1w, H - c1y - 12, 4, 4, 'FD');
 
-    // Chart 2
-    const c2 = await html2canvas(chartCards[1], { scale: 2, backgroundColor: '#ffffff', logging: false });
-    const c2w = (W / 2) - 18;
-    const c2h = c2w * (c2.height / c2.width);
-    pdf.addImage(c2.toDataURL('image/png'), 'PNG', (W / 2) + 6, 28, c2w, c2h);
+    // Card bg chart 2
+    const c2x = c1x + c1w + 6, c2y = 51, c2w = W - c2x - 10;
+    pdf.roundedRect(c2x, c2y, c2w, H - c2y - 12, 4, 4, 'FD');
+
+    // Capture & embed chart 1
+    const canvas1 = await html2canvas(chartCards[0], {
+      scale: 2.5,
+      backgroundColor: '#ffffff',
+      logging: false,
+      useCORS: true,
+    });
+    const img1H = c1w * (canvas1.height / canvas1.width) * 0.88;
+    pdf.addImage(canvas1.toDataURL('image/png'), 'PNG', c1x + 2, c1y + 2, c1w - 4, Math.min(img1H, H - c1y - 16));
+
+    // Capture & embed chart 2
+    const canvas2 = await html2canvas(chartCards[1], {
+      scale: 2.5,
+      backgroundColor: '#ffffff',
+      logging: false,
+      useCORS: true,
+    });
+    const img2H = c2w * (canvas2.height / canvas2.width) * 0.88;
+    pdf.addImage(canvas2.toDataURL('image/png'), 'PNG', c2x + 2, c2y + 2, c2w - 4, Math.min(img2H, H - c2y - 16));
 
     // ── FOOTER ──
-    const footerY = H - 6;
-    pdf.setDrawColor(228, 234, 242);
-    pdf.line(12, footerY - 4, W - 12, footerY - 4);
-    pdf.setTextColor(138, 157, 184);
-    pdf.setFontSize(7); pdf.setFont('helvetica','normal');
-    pdf.text('SDI KOTA PALU  •  Dashboard Monitoring Progres Kelurahan  •  2026', W/2, footerY, { align: 'center' });
+    pdf.setFillColor(21, 88, 168);
+    pdf.rect(0, H - 8, W, 8, 'F');
+    pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
+    pdf.setTextColor(180, 200, 230);
+    pdf.text('BPS Kota Palu  •  Dashboard Monitoring Progres Kelurahan  •  Data Real-time dari Google Sheets', W / 2, H - 3, { align: 'center' });
 
     // ── SAVE ──
-    const filename = `Monitoring_Progres_${tahun}_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.pdf`;
+    const filename = `Monitoring_Progres_${tahun}_Kec-${kec}.pdf`;
     pdf.save(filename);
 
   } catch(e) {
     alert('Gagal membuat PDF: ' + e.message);
     console.error(e);
   } finally {
+    // Kembalikan state sidebar
+    if (wasCollapsed) document.body.classList.add('collapsed');
     btn.disabled = false;
     overlay.classList.remove('show');
   }
