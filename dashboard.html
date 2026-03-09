@@ -206,7 +206,7 @@
     <div class="topbar">
       <div class="topbar-left">
         <h1>Monitoring Progres Kelurahan</h1>
-        <p>Pengisian Data SDI Kota Palu</p>
+        <p>Badan Pusat Statistik Kota Palu — Data tahun 2024, 2025, 2026</p>
       </div>
       <div class="topbar-right">
         <div class="topbar-sync">
@@ -325,10 +325,20 @@ function toggleSidebar() {
 // ── FETCH ─────────────────────────────────────────────────────
 async function fetchSheet(cfg) {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(cfg.name)}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Gagal ambil sheet "${cfg.name}"`);
+  let res;
+  try { res = await fetch(url); } catch(e) {
+    throw new Error(`Tidak bisa terhubung ke internet atau Google Sheets diblokir. (${e.message})`);
+  }
+  if (!res.ok) throw new Error(`HTTP ${res.status} saat mengambil sheet "${cfg.name}". Pastikan sheet sudah dipublikasikan.`);
   const txt = await res.text();
-  const json = JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);?\s*$/)[1]);
+  // Cek apakah Google mengembalikan error
+  if (txt.includes('"errors"') && !txt.includes('google.visualization')) {
+    throw new Error(`Google Sheets menolak akses sheet "${cfg.name}". Pastikan sheet dipublikasikan ke web dan nama tab persis sama.`);
+  }
+  const match = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);?\s*$/);
+  if (!match) throw new Error(`Format respons tidak valid dari sheet "${cfg.name}". Cek nama tab sheet — harus persis: "Bantu Hitung 2024", "Bantu Hitung 2025", "Bantu Hitung 2026".`);
+  const json = JSON.parse(match[1]);
+  if (!json.table || !json.table.rows) throw new Error(`Sheet "${cfg.name}" kosong atau strukturnya tidak sesuai.`);
 
   const out = [];
   let lastKec = '';
@@ -384,17 +394,23 @@ async function loadAllData() {
   icon.classList.add('spin');
   document.getElementById('loading').style.display = 'flex';
   document.getElementById('error-banner').style.display = 'none';
+  document.querySelector('.loader-sub').textContent = 'Menghubungkan ke Google Sheets...';
   try {
     allData = [];
-    for (const cfg of SHEETS)
+    for (const cfg of SHEETS) {
+      document.querySelector('.loader-sub').textContent = `Mengambil: ${cfg.name}...`;
       allData = allData.concat(await fetchSheet(cfg));
+    }
+    if (allData.length === 0) {
+      showErr('Data berhasil diambil tapi kosong. Kemungkinan struktur kolom sheet berbeda dari yang diharapkan. Cek apakah baris data dimulai dari baris ke-4 dan kolom A berisi nomor urut.');
+      return;
+    }
     buildKecFilter();
     applyFilters();
     setSync();
-    // Auto-refresh setiap 5 menit
     setTimeout(loadAllData, 5 * 60 * 1000);
   } catch(e) {
-    showErr(e.message + ' — Pastikan Google Sheet sudah dipublikasikan ke web (File → Bagikan → Publikasikan ke web).');
+    showErr(e.message);
   } finally {
     document.getElementById('loading').style.display = 'none';
     icon.classList.remove('spin');
