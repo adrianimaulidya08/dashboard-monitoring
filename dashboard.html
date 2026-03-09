@@ -6,6 +6,8 @@
   <title>Dashboard Monitoring Progres — SDI KOTA PALU</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -187,9 +189,9 @@
       </div>
 
       <button class="btn-reset" onclick="resetFilters()">↺ Reset Filter</button>
-      <button class="btn-reset" onclick="downloadCSV()" style="margin-top:8px;background:rgba(30,158,88,.15);border-color:rgba(30,158,88,.3);color:#4ade80">
+      <button class="btn-reset" onclick="downloadPDF()" style="margin-top:8px;background:rgba(30,158,88,.15);border-color:rgba(30,158,88,.3);color:#4ade80">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download CSV
+        Download PDF
       </button>
     </div>
 
@@ -600,36 +602,202 @@ function renderKatChart() {
   });
 }
 
-// ── DOWNLOAD ──────────────────────────────────────────────────
-function downloadCSV() {
-  // Deduplikasi: satu baris per kec+kel+tahun
+// ── DOWNLOAD PDF ──────────────────────────────────────────────
+function downloadPDF() {
   const rows = [...new Map(
     filtered.map(d => [`${d.kec}||${d.kel}||${d.tahun}`, d])
   ).values()].sort((a,b) => a.kec.localeCompare(b.kec) || a.kel.localeCompare(b.kel));
 
   if (!rows.length) return alert('Tidak ada data untuk diunduh. Coba ubah filter.');
 
-  const header = ['Tahun','Kecamatan','Kelurahan','Total Pengisian','Total Target','Progres Total (%)'];
-  const lines  = [header.join(',')];
-  for (const d of rows) {
-    lines.push([
-      d.tahun,
-      `"${d.kec}"`,
-      `"${d.kel}"`,
-      d.totalPeng,
-      d.totalTgt,
-      d.totalProg.toFixed(2)
-    ].join(','));
-  }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-  const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  const now  = new Date();
-  const ts   = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-  a.href = url; a.download = `progres_kelurahan_${ts}.csv`;
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a); URL.revokeObjectURL(url);
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const margin = 14;
+  const now = new Date();
+  const tglCetak = now.toLocaleDateString('id-ID', { day:'2-digit', month:'long', year:'numeric' });
+  const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+
+  // ── Filter info text ──
+  const fTahun = document.getElementById('fTahun').value || 'Semua Tahun';
+  const fKec   = document.getElementById('fKec').value   || 'Semua Kecamatan';
+  const fKel   = document.getElementById('fKel').value   || 'Semua Kelurahan';
+  const fKat   = document.getElementById('fKat').value   || 'Semua Kategori';
+
+  // ── HEADER BANNER ──
+  doc.setFillColor(10, 22, 40);
+  doc.rect(0, 0, pageW, 38, 'F');
+  // Accent line
+  doc.setFillColor(244, 123, 32);
+  doc.rect(0, 38, pageW, 1.5, 'F');
+
+  // Logo (base64 embedded from sidebar img)
+  try {
+    const logoEl = document.querySelector('.sb-logo img');
+    if (logoEl) {
+      doc.addImage(logoEl.src, 'PNG', margin, 5, 18, 24);
+    }
+  } catch(e) {}
+
+  // Title
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('LAPORAN MONITORING PROGRES KELURAHAN', margin + 22, 15);
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(180, 200, 220);
+  doc.text('Badan Pusat Statistik Kota Palu — SDI KOTA PALU', margin + 22, 22);
+  doc.text(`Dicetak: ${tglCetak}`, margin + 22, 28);
+
+  // ── INFO FILTER BOX ──
+  let y = 48;
+  doc.setFillColor(240, 244, 249);
+  doc.roundedRect(margin, y, pageW - margin*2, 22, 3, 3, 'F');
+  doc.setDrawColor(228, 234, 242);
+  doc.roundedRect(margin, y, pageW - margin*2, 22, 3, 3, 'S');
+
+  doc.setTextColor(61, 82, 107);
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica', 'bold');
+  doc.text('FILTER AKTIF', margin + 4, y + 6);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(13, 27, 46);
+  doc.setFontSize(8);
+  const filterCols = [
+    [`Tahun: ${fTahun}`, `Kecamatan: ${fKec}`],
+    [`Kelurahan: ${fKel}`, `Kategori: ${fKat}`],
+  ];
+  doc.text(filterCols[0][0], margin + 4, y + 12);
+  doc.text(filterCols[0][1], pageW/2, y + 12);
+  doc.text(filterCols[1][0], margin + 4, y + 18);
+  doc.text(filterCols[1][1], pageW/2, y + 18);
+
+  // ── STATISTIK RINGKASAN ──
+  y += 30;
+  const totalKel = rows.length;
+  const avgProg  = rows.reduce((s,d) => s + d.totalProg, 0) / totalKel;
+  const selesai  = rows.filter(d => d.totalProg >= 100).length;
+  const baik     = rows.filter(d => d.totalProg >= 75 && d.totalProg < 100).length;
+  const sedang   = rows.filter(d => d.totalProg >= 50 && d.totalProg < 75).length;
+  const rendah   = rows.filter(d => d.totalProg < 50).length;
+
+  const statBoxes = [
+    { label: 'Total Kelurahan', value: totalKel, color: [21, 88, 168] },
+    { label: 'Rata-rata Progres', value: avgProg.toFixed(1) + '%', color: [244, 123, 32] },
+    { label: '≥ 100% (Selesai)', value: selesai, color: [30, 158, 88] },
+    { label: '75–99% (Baik)', value: baik, color: [21, 88, 168] },
+    { label: '50–74% (Sedang)', value: sedang, color: [244, 123, 32] },
+    { label: '< 50% (Rendah)', value: rendah, color: [230, 57, 70] },
+  ];
+
+  const boxW = (pageW - margin*2 - 5*2) / 3;
+  const boxH = 18;
+  statBoxes.forEach((s, i) => {
+    const col = i % 3;
+    const row = Math.floor(i / 3);
+    const bx = margin + col * (boxW + 2.5);
+    const by = y + row * (boxH + 3);
+    doc.setFillColor(...s.color);
+    doc.roundedRect(bx, by, boxW, boxH, 2, 2, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(String(s.value), bx + boxW/2, by + 10, { align: 'center' });
+    doc.setFontSize(6.5);
+    doc.setFont('helvetica', 'normal');
+    doc.text(s.label, bx + boxW/2, by + 15, { align: 'center' });
+  });
+
+  // ── TABEL DATA ──
+  y += 2 * (boxH + 3) + 8;
+
+  doc.setTextColor(13, 27, 46);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.text('DETAIL DATA KELURAHAN', margin, y);
+  doc.setFillColor(244, 123, 32);
+  doc.rect(margin, y + 1.5, 40, 0.8, 'F');
+  y += 6;
+
+  const tableBody = rows.map((d, i) => {
+    const prog = d.totalProg;
+    const status = prog >= 100 ? 'Selesai' : prog >= 75 ? 'Baik' : prog >= 50 ? 'Sedang' : 'Rendah';
+    return [
+      i + 1,
+      d.tahun,
+      d.kec,
+      d.kel,
+      d.totalPeng.toLocaleString('id'),
+      d.totalTgt.toLocaleString('id'),
+      prog.toFixed(1) + '%',
+      status,
+    ];
+  });
+
+  doc.autoTable({
+    startY: y,
+    head: [['No', 'Tahun', 'Kecamatan', 'Kelurahan', 'Pengisian', 'Target', 'Progres', 'Status']],
+    body: tableBody,
+    margin: { left: margin, right: margin },
+    styles: {
+      font: 'helvetica',
+      fontSize: 7.5,
+      cellPadding: 3,
+      valign: 'middle',
+    },
+    headStyles: {
+      fillColor: [10, 22, 40],
+      textColor: [255, 255, 255],
+      fontStyle: 'bold',
+      fontSize: 7.5,
+      halign: 'center',
+    },
+    columnStyles: {
+      0: { halign: 'center', cellWidth: 8 },
+      1: { halign: 'center', cellWidth: 14 },
+      2: { cellWidth: 32 },
+      3: { cellWidth: 35 },
+      4: { halign: 'right', cellWidth: 20 },
+      5: { halign: 'right', cellWidth: 20 },
+      6: { halign: 'center', cellWidth: 18, fontStyle: 'bold' },
+      7: { halign: 'center', cellWidth: 18 },
+    },
+    alternateRowStyles: { fillColor: [248, 250, 253] },
+    didParseCell(data) {
+      if (data.column.index === 6 && data.section === 'body') {
+        const val = parseFloat(data.cell.raw);
+        if (val >= 100)      data.cell.styles.textColor = [30, 158, 88];
+        else if (val >= 75)  data.cell.styles.textColor = [21, 88, 168];
+        else if (val >= 50)  data.cell.styles.textColor = [244, 123, 32];
+        else                 data.cell.styles.textColor = [230, 57, 70];
+      }
+      if (data.column.index === 7 && data.section === 'body') {
+        const v = data.cell.raw;
+        if (v === 'Selesai')     { data.cell.styles.textColor = [30, 158, 88]; data.cell.styles.fontStyle = 'bold'; }
+        else if (v === 'Baik')   { data.cell.styles.textColor = [21, 88, 168]; data.cell.styles.fontStyle = 'bold'; }
+        else if (v === 'Sedang') { data.cell.styles.textColor = [244, 123, 32]; data.cell.styles.fontStyle = 'bold'; }
+        else                     { data.cell.styles.textColor = [230, 57, 70]; data.cell.styles.fontStyle = 'bold'; }
+      }
+    },
+    didDrawPage(data) {
+      // Footer setiap halaman
+      const pn = doc.internal.getCurrentPageInfo().pageNumber;
+      const total = doc.internal.getNumberOfPages();
+      doc.setFillColor(10, 22, 40);
+      doc.rect(0, pageH - 10, pageW, 10, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(7);
+      doc.setFont('helvetica', 'normal');
+      doc.text('SDI KOTA PALU — Dashboard Monitoring Progres Kelurahan', margin, pageH - 4);
+      doc.text(`Halaman ${pn} / ${total}`, pageW - margin, pageH - 4, { align: 'right' });
+    }
+  });
+
+  doc.save(`laporan_progres_kelurahan_${ts}.pdf`);
 }
 
 // ── INIT ──────────────────────────────────────────────────────
