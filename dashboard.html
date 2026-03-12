@@ -837,17 +837,12 @@ ${statCardsHtml}
       const kecAvg=kd.sum/kd.cnt;
       const kc=sColor(kecAvg);
 
-      // Group rows by kelurahan name, take average totalProg across tahun
+      // Kelompokkan per kelurahan (rata-rata semua tahun) untuk grafik
       const kelGroupMap={};
       for(const r of kd.rows){
-        if(!kelGroupMap[r.kel]) kelGroupMap[r.kel]={sum:0,cnt:0,cats:{}};
+        if(!kelGroupMap[r.kel]) kelGroupMap[r.kel]={sum:0,cnt:0};
         kelGroupMap[r.kel].sum+=r.totalProg;
         kelGroupMap[r.kel].cnt++;
-        for(const cn of CAT_NAMES){
-          if(!kelGroupMap[r.kel].cats[cn]) kelGroupMap[r.kel].cats[cn]={sum:0,cnt:0};
-          kelGroupMap[r.kel].cats[cn].sum+=r.cats[cn]?.prog||0;
-          kelGroupMap[r.kel].cats[cn].cnt++;
-        }
       }
       const uniqueKelNames=Object.keys(kelGroupMap).sort();
       const kelBarItems2=uniqueKelNames.map(kn=>({
@@ -863,24 +858,29 @@ ${statCardsHtml}
         return{label:cn,val:avg,color:sColor(avg)};
       });
 
-      // Kecamatan banner
-      const kecBanner=`
-<div style="background:linear-gradient(135deg,#0D1B2E,#15325A);border-radius:14px;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,.15)">
-  <div style="display:flex;align-items:center;gap:14px">
-    <div style="width:6px;height:48px;background:${kc};border-radius:4px"></div>
-    <div>
-      <div style="color:rgba(255,255,255,.6);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px">Laporan Detail</div>
-      <div style="color:#fff;font-size:20px;font-weight:900;margin-top:2px">Kecamatan ${kecName}</div>
-      <div style="color:rgba(255,255,255,.5);font-size:12px;margin-top:2px">${uniqueKelNames.length} kelurahan terdaftar</div>
-    </div>
-  </div>
-  <div style="background:${kc};border-radius:12px;padding:14px 24px;text-align:center;box-shadow:0 4px 14px ${kc}66">
-    <div style="color:#fff;font-size:26px;font-weight:900">${kecAvg.toFixed(1)}%</div>
-    <div style="color:rgba(255,255,255,.85);font-size:12px;font-weight:700;margin-top:2px">${sLabel(kecAvg)}</div>
-  </div>
+      // ── Stat cards SAMA PERSIS dengan halaman 1 ──
+      const kJS=kelBarItems2.filter(r=>r.val>=100).length;
+      const kJB=kelBarItems2.filter(r=>r.val>=75&&r.val<100).length;
+      const kJSd=kelBarItems2.filter(r=>r.val>=50&&r.val<75).length;
+      const kJR=kelBarItems2.filter(r=>r.val<50).length;
+      const kecStatCards=`
+<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px">
+  ${[
+    {v:uniqueKelNames.length, l:'Total Kelurahan', sub:'data tercatat',    c:'#1558A8'},
+    {v:kecAvg.toFixed(1)+'%',l:'Rata-rata Progres',sub:'kecamatan ini',   c:'#F47B20'},
+    {v:kJS,  l:'Selesai', sub:'Progres \u2265100%', c:'#1E9E58'},
+    {v:kJB,  l:'Baik',    sub:'Progres 75\u201399%',c:'#1558A8'},
+    {v:kJSd, l:'Sedang',  sub:'Progres 50\u201374%',c:'#F47B20'},
+    {v:kJR,  l:'Rendah',  sub:'Progres <50%',       c:'#e63946'},
+  ].map(i=>`
+    <div style="background:${i.c};border-radius:14px;padding:18px 12px;text-align:center;color:#fff;box-shadow:0 4px 14px ${i.c}55">
+      <div style="font-size:28px;font-weight:900;line-height:1">${i.v}</div>
+      <div style="font-size:12px;font-weight:700;margin-top:6px;opacity:.95">${i.l}</div>
+      <div style="font-size:10px;opacity:.75;margin-top:3px">${i.sub}</div>
+    </div>`).join('')}
 </div>`;
 
-      // Tabel kelurahan - sorted by kel then tahun
+      // ── Tabel detail per tahun ──
       const sortedRows=[...kd.rows].sort((a,b)=>a.kel.localeCompare(b.kel)||a.tahun-b.tahun);
       const tblRows=sortedRows.map((r,i)=>`
 <tr style="background:${i%2===0?'#fff':'#F8FAFD'}">
@@ -894,58 +894,37 @@ ${statCardsHtml}
 </tr>`).join('');
 
       const tabelDetail=`
-<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-top:16px">
   <div style="background:linear-gradient(90deg,#0D1B2E,#15325A);padding:12px 20px;display:flex;align-items:center;gap:10px">
     <div style="width:5px;height:22px;background:${kc};border-radius:3px"></div>
     <span style="color:#fff;font-size:14px;font-weight:800">Detail Data Kelurahan &mdash; Semua 10 Kategori</span>
   </div>
-  <div style="overflow-x:auto">
   <table style="width:100%;border-collapse:collapse">
     <thead>
       <tr style="background:#15325A">
-        <th style="padding:10px 12px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid #1558A820;white-space:nowrap">No</th>
-        <th style="padding:10px 14px;color:#fff;font-size:10px;font-weight:700;text-align:left;border-right:1px solid #1558A820;min-width:120px">Kelurahan</th>
-        <th style="padding:10px 10px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid #1558A820">Thn</th>
-        <th style="padding:10px 12px;color:#fff;font-size:10px;font-weight:700;text-align:right;border-right:1px solid #1558A820;white-space:nowrap">Pengisian</th>
-        <th style="padding:10px 12px;color:#fff;font-size:10px;font-weight:700;text-align:right;border-right:1px solid #1558A820;white-space:nowrap">Target</th>
-        <th style="padding:10px 10px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid #1558A820;white-space:nowrap;background:#0D1B2E">Total %</th>
-        ${CAT_NAMES.map(cn=>`<th style="padding:10px 6px;color:#94B4D4;font-size:9px;font-weight:700;text-align:center;border-right:1px solid #1558A820;white-space:nowrap">${cn}</th>`).join('')}
+        <th style="padding:9px 10px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.1);white-space:nowrap">No</th>
+        <th style="padding:9px 12px;color:#fff;font-size:10px;font-weight:700;text-align:left;border-right:1px solid rgba(255,255,255,.1);min-width:110px">Kelurahan</th>
+        <th style="padding:9px 8px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.1)">Thn</th>
+        <th style="padding:9px 10px;color:#fff;font-size:10px;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.1);white-space:nowrap">Pengisian</th>
+        <th style="padding:9px 10px;color:#fff;font-size:10px;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.1);white-space:nowrap">Target</th>
+        <th style="padding:9px 8px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.1);white-space:nowrap;background:#0D1B2E">Total %</th>
+        ${CAT_NAMES.map(cn=>`<th style="padding:9px 5px;color:#94B4D4;font-size:9px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.07);white-space:nowrap">${cn}</th>`).join('')}
       </tr>
     </thead>
     <tbody>${tblRows}</tbody>
   </table>
-  </div>
 </div>`;
 
-      // Mini stat cards per kecamatan (based on unique kelurahan averages)
-      const kJS=kelBarItems2.filter(r=>r.val>=100).length;
-      const kJB=kelBarItems2.filter(r=>r.val>=75&&r.val<100).length;
-      const kJSd=kelBarItems2.filter(r=>r.val>=50&&r.val<75).length;
-      const kJR=kelBarItems2.filter(r=>r.val<50).length;
-      const miniStats=`
-<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
-  ${[
-    {v:kJS, l:'Selesai', sub:'≥100%', c:'#1E9E58'},
-    {v:kJB, l:'Baik', sub:'75–99%', c:'#1558A8'},
-    {v:kJSd,l:'Sedang',sub:'50–74%',c:'#F47B20'},
-    {v:kJR, l:'Rendah',sub:'<50%',  c:'#e63946'},
-  ].map(i=>`<div style="background:${i.c};border-radius:12px;padding:12px;text-align:center;color:#fff;box-shadow:0 3px 10px ${i.c}55">
-    <div style="font-size:22px;font-weight:900">${i.v}</div>
-    <div style="font-size:11px;font-weight:700;margin-top:4px">${i.l}</div>
-    <div style="font-size:10px;opacity:.75">${i.sub}</div>
-  </div>`).join('')}
-</div>`;
-
+      // ── Konten halaman kecamatan — struktur SAMA dengan halaman 1 ──
       const kecContent=`
-${kecBanner}
-${miniStats}
-<div style="display:grid;grid-template-columns:3fr 2fr;gap:16px;margin-bottom:16px">
-  ${card(kc,
-    cardTitle('Progres per Kelurahan','Rata-rata progres tiap kelurahan (semua tahun)','Bar Chart',kc)+
+${kecStatCards}
+<div style="display:grid;grid-template-columns:3fr 2fr;gap:16px">
+  ${card('#F47B20',
+    cardTitle('Progres per Kelurahan','Rata-rata persentase progres tiap kelurahan','Diagram Batang','#1558A8')+
     vBarSection(kelBarItems2,180)+legend()
   )}
-  ${card('#1558A8',
-    cardTitle('Rata-rata per Kategori','Rata-rata progres tiap kategori untuk kecamatan ini','Horizontal Bar','#F47B20')+
+  ${card('#1E9E58',
+    cardTitle('Rata-rata per Kategori','Rata-rata progres berdasarkan kategori data','Horizontal Bar','#F47B20')+
     hBarSection(kecCatItems)
   )}
 </div>
