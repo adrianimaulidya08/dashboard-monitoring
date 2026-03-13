@@ -511,6 +511,7 @@ function renderKecChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { top: 28 } },
       plugins: {
         legend: { display: false },
         datalabels: {
@@ -907,7 +908,6 @@ ${statCardsHtml}
   </table>
 </div>`;
 
-      // ── Konten halaman kecamatan — struktur SAMA dengan halaman 1 ──
       const kecContent=`
 ${kecStatCards}
 <div style="display:grid;grid-template-columns:3fr 2fr;gap:16px">
