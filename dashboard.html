@@ -816,14 +816,6 @@ ${statCardsHtml}
       const imgData=canvas.toDataURL('image/jpeg',0.95);
       if(pageIdx>0) doc.addPage();
       doc.addImage(imgData,'JPEG',0,0,PW,PH);
-      // Fit to page height if needed
-      if(imgH<=PH){
-        doc.addImage(imgData,'JPEG',0,0,PW,imgH);
-      } else {
-        // Scale down to fit
-        const scale=PH/imgH;
-        doc.addImage(imgData,'JPEG',0,0,PW*scale,PH);
-      }
     };
 
     await renderPage(wrap(page1Content,1,totalPages),0);
@@ -947,4 +939,3 @@ loadAllData();
 </script>
 </body>
 </html>
-
