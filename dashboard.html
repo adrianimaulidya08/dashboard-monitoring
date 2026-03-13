@@ -814,8 +814,8 @@ ${statCardsHtml}
       container.style.cssText='position:fixed;left:-9999px;top:0;z-index:-1;width:1122px;';
       container.innerHTML='';
       const imgData=canvas.toDataURL('image/jpeg',0.95);
-      const imgH=(canvas.height/canvas.width)*PW;
       if(pageIdx>0) doc.addPage();
+      doc.addImage(imgData,'JPEG',0,0,PW,PH);
       // Fit to page height if needed
       if(imgH<=PH){
         doc.addImage(imgData,'JPEG',0,0,PW,imgH);
@@ -947,3 +947,4 @@ loadAllData();
 </script>
 </body>
 </html>
+
