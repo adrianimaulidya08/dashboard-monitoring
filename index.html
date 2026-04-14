@@ -34,37 +34,40 @@
     /* SIDEBAR */
     aside{
       width:260px;min-height:100vh;
-      background:linear-gradient(175deg,#0A1628 0%,#0D2140 40%,#0F2952 100%);
+      background:linear-gradient(175deg,#7A3500 0%,#A84A00 40%,#C45800 100%);
       display:flex;flex-direction:column;
       position:fixed;top:0;left:0;bottom:0;z-index:200;
-      box-shadow:4px 0 32px rgba(0,0,0,.25);overflow:hidden;
+      box-shadow:4px 0 32px rgba(0,0,0,.25);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.2) transparent;
       transition:transform .3s ease;
     }
     aside::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(244,123,32,.12) 0%,transparent 70%);top:-80px;right:-80px;pointer-events:none}
     aside::after{content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(30,158,88,.1) 0%,transparent 70%);bottom:80px;left:-60px;pointer-events:none}
 
-    .sb-brand{padding:28px 24px 22px;border-bottom:1px solid rgba(255,255,255,.08);position:relative;z-index:1}
+    aside::-webkit-scrollbar{width:4px}
+    aside::-webkit-scrollbar-track{background:transparent}
+    aside::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
+    .sb-brand{padding:28px 24px 22px;border-bottom:1px solid rgba(255,255,255,.15);position:relative;z-index:1}
     .sb-logo{width:52px;height:52px;background:transparent;border-radius:0;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
     .sb-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-.2px;line-height:1.3}
-    .sb-sub{font-size:10.5px;color:rgba(255,255,255,.45);font-weight:400;margin-top:3px;letter-spacing:.3px}
-    .sb-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(244,123,32,.2);border:1px solid rgba(244,123,32,.35);color:#ffb370;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:10px;letter-spacing:.4px}
+    .sb-sub{font-size:10.5px;color:rgba(255,255,255,.6);font-weight:400;margin-top:3px;letter-spacing:.3px}
+    .sb-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:10px;letter-spacing:.4px}
     .sb-pill::before{content:'●';font-size:7px;color:var(--orange)}
 
     .sb-section{padding:18px 16px 0;position:relative;z-index:1}
-    .sb-section-lbl{font-size:9.5px;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:1.5px;padding:0 8px;margin-bottom:8px}
+    .sb-section-lbl{font-size:9.5px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;padding:0 8px;margin-bottom:8px}
 
     .sf-group{margin-bottom:13px}
-    .sf-label{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px;padding:0 2px;display:flex;align-items:center;gap:5px}
-    select{width:100%;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--rs);padding:9px 32px 9px 12px;cursor:pointer;outline:none;transition:border .15s,background .15s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(255,255,255,0.4)' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
-    select:focus{border-color:rgba(244,123,32,.6);background:rgba(255,255,255,.1)}
-    select option{background:#0D2140;color:#fff}
+    .sf-label{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:6px;padding:0 2px;display:flex;align-items:center;gap:5px}
+    select{width:100%;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:#fff;background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.2);border-radius:var(--rs);padding:9px 32px 9px 12px;cursor:pointer;outline:none;transition:border .15s,background .15s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(255,255,255,0.4)' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+    select:focus{border-color:rgba(255,255,255,.6);background:rgba(0,0,0,.2)}
+    select option{background:#A84A00;color:#fff}
 
-    .btn-reset{width:100%;background:rgba(244,123,32,.15);border:1px solid rgba(244,123,32,.3);color:#ffb370;font-family:'Sora',sans-serif;font-size:11px;font-weight:700;padding:9px;border-radius:var(--rs);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px;letter-spacing:.3px}
-    .btn-reset:hover{background:rgba(244,123,32,.28);border-color:rgba(244,123,32,.5)}
+    .btn-reset{width:100%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'Sora',sans-serif;font-size:11px;font-weight:700;padding:9px;border-radius:var(--rs);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px;letter-spacing:.3px}
+    .btn-reset:hover{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.5)}
 
-    .sb-footer{margin-top:auto;padding:18px 24px;border-top:1px solid rgba(255,255,255,.06);position:relative;z-index:1}
-    .sb-footer-txt{font-size:10px;color:rgba(255,255,255,.25);font-weight:500;line-height:1.6}
-    .sb-footer-txt b{color:rgba(255,255,255,.45)}
+    .sb-footer{margin-top:auto;padding:18px 24px;border-top:1px solid rgba(255,255,255,.1);position:relative;z-index:1}
+    .sb-footer-txt{font-size:10px;color:rgba(255,255,255,.4);font-weight:500;line-height:1.6}
+    .sb-footer-txt b{color:rgba(255,255,255,.65)}
 
     /* MAIN */
     .content{margin-left:260px;flex:1;min-height:100vh;display:flex;flex-direction:column;transition:margin-left .3s ease}
@@ -76,8 +79,8 @@
     .topbar-sync{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--text2);font-weight:600}
     .sync-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:pulse 2.5s infinite}
     @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
-    .btn-refresh{background:var(--blue);color:#fff;border:none;border-radius:var(--rs);padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'Sora',sans-serif;transition:all .15s;box-shadow:0 4px 12px rgba(21,88,168,.3)}
-    .btn-refresh:hover{background:#1145a0;transform:translateY(-1px);box-shadow:0 6px 16px rgba(21,88,168,.4)}
+    .btn-refresh{background:#C45800;color:#fff;border:none;border-radius:var(--rs);padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'Sora',sans-serif;transition:all .15s;box-shadow:0 4px 12px rgba(196,88,0,.3)}
+    .btn-refresh:hover{background:#A84A00;transform:translateY(-1px);box-shadow:0 6px 16px rgba(196,88,0,.4)}
     .spin{animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -117,16 +120,43 @@
     footer b{color:var(--orange)}
 
     /* TOGGLE SIDEBAR */
-    .toggle-btn{position:fixed;top:16px;left:224px;z-index:300;width:32px;height:32px;background:#1558A8;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(21,88,168,.4);transition:left .3s ease,background .15s}
-    .toggle-btn:hover{background:#1145a0}
+    .toggle-btn{position:fixed;top:16px;left:224px;z-index:300;width:32px;height:32px;background:#C45800;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(196,88,0,.5);transition:left .3s ease,background .15s}
+    .toggle-btn:hover{background:#A84A00}
     .toggle-btn svg{transition:transform .3s}
     body.sidebar-collapsed aside{transform:translateX(-260px)}
     body.sidebar-collapsed .content{margin-left:0}
-    body.sidebar-collapsed .toggle-btn{left:12px;background:#0F2952}
+    body.sidebar-collapsed .toggle-btn{left:12px;background:#7A3500}
     body.sidebar-collapsed .toggle-btn svg{transform:rotate(180deg)}
+
+    /* OVERLAY mobile */
+    .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;backdrop-filter:blur(2px)}
+
+    /* MOBILE */
+    @media(max-width:768px){
+      aside{transform:translateX(-260px);-webkit-overflow-scrolling:touch}
+      body.sidebar-open aside{transform:translateX(0)!important}
+      body.sidebar-open .sb-overlay{display:block}
+      .content{margin-left:0!important}
+      .toggle-btn{left:12px!important;top:13px;background:#C45800!important}
+      body.sidebar-open .toggle-btn{left:268px!important;background:#7A3500!important}
+      body.sidebar-open .toggle-btn svg{transform:rotate(180deg)}
+      body:not(.sidebar-open) .toggle-btn svg{transform:none}
+      .topbar{padding:0 12px 0 54px;height:54px}
+      .topbar-left h1{font-size:13px}
+      .topbar-left p{display:none}
+      .page-body{padding:14px 12px}
+      .charts-grid{grid-template-columns:1fr!important;gap:12px}
+      .chart-wrap{height:240px}
+    }
+    @media(max-width:480px){
+      .page-body{padding:10px 8px}
+      .chart-wrap{height:200px}
+      .topbar-sync{display:none}
+    }
   </style>
 </head>
 <body>
+<div class="sb-overlay" onclick="toggleSidebar()"></div>
 
 <div id="loading">
   <div class="loader-ring"></div>
@@ -229,6 +259,16 @@
       </div>
     </div>
 
+    <!-- Filter Aktif Strip -->
+    <div id="filter-strip" style="background:#FFF3E8;border-left:4px solid #C45800;padding:9px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid #FFD9B3">
+      <span style="color:#C45800;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase">Filter Aktif</span>
+      <span style="color:#ccc">|</span>
+      <span id="chip-tahun" style="background:#C45800;color:#fff;font-size:11px;font-weight:600;padding:3px 12px;border-radius:20px">Tahun: Semua</span>
+      <span id="chip-kec"   style="background:#C45800;color:#fff;font-size:11px;font-weight:600;padding:3px 12px;border-radius:20px">Kecamatan: Semua</span>
+      <span id="chip-kel"   style="background:#C45800;color:#fff;font-size:11px;font-weight:600;padding:3px 12px;border-radius:20px">Kelurahan: Semua</span>
+      <span id="chip-kat"   style="background:#C45800;color:#fff;font-size:11px;font-weight:600;padding:3px 12px;border-radius:20px">Kategori: Semua</span>
+    </div>
+
     <div class="page-body">
       <div id="error-banner">⚠️ <span id="error-msg"></span></div>
 
@@ -324,12 +364,16 @@ function showErr(msg) {
 
 // ── SIDEBAR TOGGLE ─────────────────────────────────────────────
 function toggleSidebar() {
-  document.body.classList.toggle('sidebar-collapsed');
-  // Trigger chart resize setelah animasi sidebar selesai
-  setTimeout(() => {
-    if (chKec) chKec.resize();
-    if (chKat) chKat.resize();
-  }, 320);
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    document.body.classList.toggle('sidebar-open');
+  } else {
+    document.body.classList.toggle('sidebar-collapsed');
+    setTimeout(() => {
+      if (chKec) chKec.resize();
+      if (chKat) chKat.resize();
+    }, 320);
+  }
 }
 
 // ── FETCH ─────────────────────────────────────────────────────
@@ -459,6 +503,10 @@ function applyFilters() {
     (!kel   || d.kel === kel) &&
     (!kat   || d.kategori === kat)
   );
+  document.getElementById('chip-tahun').textContent = 'Tahun: '     + (tahun || 'Semua');
+  document.getElementById('chip-kec').textContent   = 'Kecamatan: ' + (kec   || 'Semua');
+  document.getElementById('chip-kel').textContent   = 'Kelurahan: ' + (kel   || 'Semua');
+  document.getElementById('chip-kat').textContent   = 'Kategori: '  + (kat   || 'Semua');
   renderCharts();
 }
 
@@ -665,6 +713,308 @@ async function downloadPDF() {
 
     // ── Shared HTML blocks ──────────────────────────────────────
     const pageHeader=()=>`
+<div style="background:linear-gradient(135deg,#C45800 0%,#A84A00 100%);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:5px solid #FFD580">
+  <div style="display:flex;align-items:center;gap:16px">
+    ${logoSrc?`<img src="${logoSrc}" style="height:56px;width:auto;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))"/>`:''}
+    <div>
+      <div style="color:#fff;font-size:22px;font-weight:800;letter-spacing:-.5px;text-shadow:0 1px 3px rgba(0,0,0,.2)">Dashboard Monitoring Progres Kelurahan</div>
+      <div style="color:rgba(255,255,255,.85);font-size:13px;margin-top:3px;font-weight:500">SDI Kota Palu &nbsp;|&nbsp; Badan Pusat Statistik Kota Palu</div>
+    </div>
+  </div>
+  <div style="text-align:right">
+    <div style="color:rgba(255,255,255,.7);font-size:11px">Dicetak:</div>
+    <div style="color:#fff;font-size:13px;font-weight:700">${tgl}</div>
+  </div>
+</div>`;
+
+    const filterBar=()=>`
+<div style="background:#FFF3E0;border-left:4px solid #C45800;padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0">
+  <span style="color:#A84A00;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase">Filter Aktif</span>
+  <span style="color:#ccc">|</span>
+  ${[`Tahun: ${fTahun}`,`Kecamatan: ${fKec}`,`Kelurahan: ${fKel}`,`Kategori: ${fKat}`]
+    .map(p=>`<span style="background:#C45800;color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px">${p}</span>`)
+    .join('')}
+</div>`;
+
+    const pageFooter=(pg,tot)=>`
+<div style="background:#7A3500;padding:9px 24px;display:flex;justify-content:space-between;align-items:center;margin-top:0">
+  <span style="color:rgba(255,255,255,.6);font-size:11px">Badan Pusat Statistik Kota Palu &mdash; SDI KOTA PALU</span>
+  <span style="color:rgba(255,255,255,.8);font-size:11px;font-weight:600">Halaman ${pg} dari ${tot}</span>
+</div>`;
+
+    // ── Horizontal bar chart (untuk kategori) ──────────────────
+    const hBarSection=(items)=>items.map(({label,val,color})=>`
+<div style="display:flex;align-items:center;gap:0;padding:6px 0;border-bottom:1px solid #F0F4F9">
+  <div style="min-width:140px;text-align:right;padding-right:12px;color:#0D1B2E;font-size:12px;font-weight:600">${label}</div>
+  <div style="flex:1;background:#E4EAF2;border-radius:6px;height:18px;overflow:hidden;position:relative">
+    <div style="width:${Math.min(val,100)}%;background:${color};height:100%;border-radius:6px;transition:width .3s"></div>
+  </div>
+  <div style="min-width:56px;text-align:left;padding-left:10px;color:${color};font-size:13px;font-weight:800">${val>0?val.toFixed(1)+'%':'&#8212;'}</div>
+</div>`).join('');
+
+    // ── Vertical bar chart ──────────────────────────────────────
+    const vBarSection=(items,chartH=180)=>{
+      const maxV=Math.max(...items.map(x=>x.val),100);
+      const scale=chartH/maxV;
+      const barW=Math.max(28,Math.min(60,Math.floor(640/items.length)-8));
+      const gridLines=[0,25,50,75,100].map(pct=>{
+        const bot=Math.round(pct*scale);
+        return `<div style="position:absolute;bottom:${bot}px;left:36px;right:0;border-top:1px dashed ${pct===100?'#1558A840':'#E4EAF2'};pointer-events:none">
+          <span style="position:absolute;left:-36px;top:-7px;color:#8A9DB8;font-size:10px;font-weight:600">${pct}%</span>
+        </div>`;
+      }).join('');
+      const bars=items.map(({label,val,color})=>{
+        const h=Math.max(6,Math.round(val*scale));
+        return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;min-width:${barW}px;max-width:${barW+24}px">
+          <div style="color:${color};font-size:11px;font-weight:800;margin-bottom:5px;white-space:nowrap">${val.toFixed(1)}%</div>
+          <div style="width:${barW}px;height:${h}px;background:linear-gradient(180deg,${color}dd,${color});border-radius:5px 5px 0 0;box-shadow:0 3px 8px ${color}44;min-height:6px"></div>
+          <div style="color:#3D526B;font-size:10px;margin-top:7px;text-align:center;max-width:${barW+20}px;word-break:break-word;line-height:1.4">${label}</div>
+        </div>`;
+      }).join('');
+      return `<div style="position:relative;padding:20px 8px 0">
+        <div style="position:relative;height:${chartH}px;margin-left:36px;border-bottom:2px solid #CBD5E1">${gridLines}</div>
+        <div style="display:flex;align-items:flex-end;gap:6px;height:${chartH}px;margin-top:-${chartH}px;margin-left:36px">${bars}</div>
+      </div>`;
+    };
+
+    const legend=()=>`
+<div style="display:flex;gap:18px;margin-top:14px;padding-top:10px;border-top:1px solid #E4EAF2">
+  ${[['#1E9E58','&ge; 100%'],['#1558A8','75&ndash;99%'],['#F47B20','50&ndash;74%'],['#e63946','&lt; 50%']]
+    .map(([c,l])=>`<div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:3px;background:${c}"></div><span style="font-size:11px;color:#3D526B;font-weight:600">${l}</span></div>`)
+    .join('')}
+</div>`;
+
+    // ── Page wrapper ────────────────────────────────────────────
+    const wrap=(content,pg,tot)=>`
+<div style="width:${W}px;background:#F0F4F9;font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:#0D1B2E">
+  ${pageHeader()}
+  ${filterBar()}
+  <div style="padding:16px 20px 20px">${content}</div>
+  ${pageFooter(pg,tot)}
+</div>`;
+
+    const card=(accentColor,content,extraStyle='')=>`
+<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);${extraStyle}">
+  <div style="height:5px;background:${accentColor}"></div>
+  <div style="padding:18px 20px">${content}</div>
+</div>`;
+
+    const cardTitle=(title,desc,badge,badgeColor)=>`
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+  <div>
+    <div style="font-size:16px;font-weight:800;color:#0D1B2E">${title}</div>
+    ${desc?`<div style="font-size:11px;color:#8A9DB8;margin-top:3px">${desc}</div>`:''}
+  </div>
+  ${badge?`<span style="background:${badgeColor||'#C45800'};color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;white-space:nowrap">${badge}</span>`:''}
+</div>`;
+
+    // ════════════════════════════════════════════
+    // HALAMAN 1 — RINGKASAN
+    // ════════════════════════════════════════════
+    const statCardsHtml=`
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px">
+  ${[
+    {v:totalKel, l:'Total Kelurahan', sub:'data tercatat',   c:'#1558A8'},
+    {v:jS,       l:'Selesai',         sub:'Progres &ge;100%', c:'#1E9E58'},
+    {v:jB,       l:'Baik',            sub:'Progres 75-99%',   c:'#1558A8'},
+    {v:jSd,      l:'Sedang',          sub:'Progres 50-74%',   c:'#F47B20'},
+    {v:jR,       l:'Rendah',          sub:'Progres &lt;50%',  c:'#e63946'},
+  ].map(i=>`
+    <div style="background:${i.c};border-radius:14px;padding:18px 12px;text-align:center;color:#fff;box-shadow:0 4px 14px ${i.c}55">
+      <div style="font-size:28px;font-weight:900;line-height:1">${i.v}</div>
+      <div style="font-size:12px;font-weight:700;margin-top:6px;opacity:.95">${i.l}</div>
+      <div style="font-size:10px;opacity:.75;margin-top:3px">${i.sub}</div>
+    </div>`).join('')}
+</div>`;
+
+    const kecBarItems=kecList.map(kn=>({label:kn,val:kecMap[kn].sum/kecMap[kn].cnt,color:sColor(kecMap[kn].sum/kecMap[kn].cnt)}));
+    const catBarItems=CAT_NAMES.map(cn=>({label:cn,val:catAvg[cn].cnt>0?catAvg[cn].sum/catAvg[cn].cnt:0,color:sColor(catAvg[cn].cnt>0?catAvg[cn].sum/catAvg[cn].cnt:0)}));
+
+    const page1Content=`
+${statCardsHtml}
+<div style="display:grid;grid-template-columns:3fr 2fr;gap:16px">
+  ${card('#F47B20',
+    cardTitle('Progres per Kecamatan','Rata-rata persentase progres pengisian tiap kecamatan','Diagram Batang','#C45800')+
+    vBarSection(kecBarItems,180)+legend()
+  )}
+  ${card('#1E9E58',
+    cardTitle('Progres per Kategori','Rata-rata progres berdasarkan kategori data','Horizontal Bar','#C45800')+
+    hBarSection(catBarItems)
+  )}
+</div>`;
+
+    // ── Render helper ───────────────────────────────────────────
+    const container=document.getElementById('pdf-render');
+    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    const PW=doc.internal.pageSize.getWidth();
+    const PH=doc.internal.pageSize.getHeight();
+
+    const renderPage=async(htmlContent,pageIdx)=>{
+      container.style.cssText=`position:fixed;left:0;top:0;z-index:99999;width:${W}px;background:#F0F4F9;`;
+      container.innerHTML=htmlContent;
+      await new Promise(r=>setTimeout(r,400));
+      const canvas=await html2canvas(container,{
+        scale:2,useCORS:true,allowTaint:true,
+        width:W,height:container.scrollHeight,
+        windowWidth:W,logging:false,backgroundColor:'#F0F4F9'
+      });
+      container.style.cssText='position:fixed;left:-9999px;top:0;z-index:-1;width:1122px;';
+      container.innerHTML='';
+      const imgData=canvas.toDataURL('image/jpeg',0.95);
+      if(pageIdx>0) doc.addPage();
+      doc.addImage(imgData,'JPEG',0,0,PW,PH);
+    };
+
+    await renderPage(wrap(page1Content,1,totalPages),0);
+
+    // ════════════════════════════════════════════
+    // HALAMAN 2+ — DETAIL PER KECAMATAN
+    // ════════════════════════════════════════════
+    for(let ki=0;ki<kecList.length;ki++){
+      const kecName=kecList[ki];
+      const kd=kecMap[kecName];
+      const kecAvg=kd.sum/kd.cnt;
+      const kc=sColor(kecAvg);
+
+      // Kelompokkan per kelurahan (rata-rata semua tahun)
+      const kelGroupMap={};
+      for(const r of kd.rows){
+        if(!kelGroupMap[r.kel]) kelGroupMap[r.kel]={sum:0,cnt:0};
+        kelGroupMap[r.kel].sum+=r.totalProg;
+        kelGroupMap[r.kel].cnt++;
+      }
+      const uniqueKelNames=Object.keys(kelGroupMap).sort();
+      const kelBarItems2=uniqueKelNames.map(kn=>({
+        label:kn,
+        val:kelGroupMap[kn].sum/kelGroupMap[kn].cnt,
+        color:sColor(kelGroupMap[kn].sum/kelGroupMap[kn].cnt)
+      }));
+
+      const kecCatItems=CAT_NAMES.map(cn=>{
+        let s=0,c2=0;
+        for(const r of kd.rows){s+=r.cats[cn]?.prog||0;c2++;}
+        const avg=c2>0?s/c2:0;
+        return{label:cn,val:avg,color:sColor(avg)};
+      });
+
+      // 5 stat cards — tanpa rata-rata progres
+      const kJS=kelBarItems2.filter(r=>r.val>=100).length;
+      const kJB=kelBarItems2.filter(r=>r.val>=75&&r.val<100).length;
+      const kJSd=kelBarItems2.filter(r=>r.val>=50&&r.val<75).length;
+      const kJR=kelBarItems2.filter(r=>r.val<50).length;
+      const kecStatCards=`
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px">
+  ${[
+    {v:uniqueKelNames.length, l:'Total Kelurahan', sub:'data tercatat',      c:'#1558A8'},
+    {v:kJS,  l:'Selesai', sub:'Progres \u2265100%',   c:'#1E9E58'},
+    {v:kJB,  l:'Baik',    sub:'Progres 75\u201399%',  c:'#1558A8'},
+    {v:kJSd, l:'Sedang',  sub:'Progres 50\u201374%',  c:'#F47B20'},
+    {v:kJR,  l:'Rendah',  sub:'Progres <50%',         c:'#e63946'},
+  ].map(i=>`
+    <div style="background:${i.c};border-radius:14px;padding:18px 12px;text-align:center;color:#fff;box-shadow:0 4px 14px ${i.c}55">
+      <div style="font-size:28px;font-weight:900;line-height:1">${i.v}</div>
+      <div style="font-size:12px;font-weight:700;margin-top:6px;opacity:.95">${i.l}</div>
+      <div style="font-size:10px;opacity:.75;margin-top:3px">${i.sub}</div>
+    </div>`).join('')}
+</div>`;
+
+      // Tabel detail
+      const sortedRows=[...kd.rows].sort((a,b)=>a.kel.localeCompare(b.kel)||a.tahun-b.tahun);
+      const tblRows=sortedRows.map((r,i)=>`
+<tr style="background:${i%2===0?'#fff':'#F8FAFD'}">
+  <td style="padding:7px 10px;color:#8A9DB8;font-size:10px;text-align:center;border-right:1px solid #E4EAF2">${i+1}</td>
+  <td style="padding:7px 12px;font-weight:700;font-size:11px;border-right:1px solid #E4EAF2">${r.kel}</td>
+  <td style="padding:7px 8px;text-align:center;font-size:10px;color:#5A7290;border-right:1px solid #E4EAF2">${r.tahun}</td>
+  <td style="padding:7px 10px;text-align:right;font-size:10px;border-right:1px solid #E4EAF2">${r.totalPeng.toLocaleString('id')}</td>
+  <td style="padding:7px 10px;text-align:right;font-size:10px;border-right:1px solid #E4EAF2">${r.totalTgt.toLocaleString('id')}</td>
+  <td style="padding:7px 8px;text-align:center;font-weight:900;font-size:12px;color:${sColor(r.totalProg)};background:${sColor(r.totalProg)}15;border-right:1px solid #E4EAF2">${r.totalProg.toFixed(1)}%</td>
+  ${CAT_NAMES.map(cn=>`<td style="padding:7px 5px;text-align:center;font-size:9px;color:${sColor(r.cats[cn]?.prog||0)};font-weight:700;border-right:1px solid #F0F4F9">${(r.cats[cn]?.prog||0).toFixed(1)}%</td>`).join('')}
+</tr>`).join('');
+
+      const tabelDetail=`
+<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-top:16px">
+  <div style="background:linear-gradient(90deg,#C45800,#A84A00);padding:12px 20px;display:flex;align-items:center;gap:10px">
+    <div style="width:5px;height:22px;background:${kc};border-radius:3px"></div>
+    <span style="color:#fff;font-size:14px;font-weight:800">Detail Data Kelurahan &mdash; Semua 10 Kategori</span>
+  </div>
+  <table style="width:100%;border-collapse:collapse">
+    <thead>
+      <tr style="background:#A84A00">
+        <th style="padding:9px 10px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.1)">No</th>
+        <th style="padding:9px 12px;color:#fff;font-size:10px;font-weight:700;text-align:left;border-right:1px solid rgba(255,255,255,.1);min-width:110px">Kelurahan</th>
+        <th style="padding:9px 8px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.1)">Thn</th>
+        <th style="padding:9px 10px;color:#fff;font-size:10px;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.1);white-space:nowrap">Pengisian</th>
+        <th style="padding:9px 10px;color:#fff;font-size:10px;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.1);white-space:nowrap">Target</th>
+        <th style="padding:9px 8px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.1);background:#7A3500">Total %</th>
+        ${CAT_NAMES.map(cn=>`<th style="padding:9px 5px;color:#FFD580;font-size:9px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.07);white-space:nowrap">${cn}</th>`).join('')}
+      </tr>
+    </thead>
+    <tbody>${tblRows}</tbody>
+  </table>
+</div>`;
+
+      // Konten — struktur IDENTIK halaman 1
+      const kecContent=`
+${kecStatCards}
+<div style="display:grid;grid-template-columns:3fr 2fr;gap:16px">
+  ${card('#F47B20',
+    cardTitle('Progres per Kelurahan','Rata-rata persentase progres tiap kelurahan','Diagram Batang','#C45800')+
+    vBarSection(kelBarItems2,220)+legend()
+  )}
+  ${card('#1E9E58',
+    cardTitle('Rata-rata per Kategori','Rata-rata progres berdasarkan kategori data','Horizontal Bar','#C45800')+
+    hBarSection(kecCatItems)
+  )}
+</div>
+${tabelDetail}`;
+
+      await renderPage(wrap(kecContent,ki+2,totalPages),ki+1);
+    }
+
+    doc.save(`laporan_monitoring_progres_${ts}.pdf`);
+  } finally {
+    const btn=document.querySelector('button[onclick="downloadPDF()"]');
+    if(btn){btn.disabled=false;btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF';}
+    const c=document.getElementById('pdf-render');
+    if(c){c.style.cssText='position:fixed;left:-9999px;top:0;z-index:-1;width:1122px;';c.innerHTML='';}
+  }
+}
+
+    // Susun data
+    const kelMap = new Map();
+    for (const d of filtered) {
+      const key = `${d.kec}||${d.kel}||${d.tahun}`;
+      if (!kelMap.has(key)) kelMap.set(key,{kec:d.kec,kel:d.kel,tahun:d.tahun,totalPeng:d.totalPeng,totalTgt:d.totalTgt,totalProg:d.totalProg,cats:{}});
+      kelMap.get(key).cats[d.kategori]={peng:d.pengisian,tgt:d.target,prog:d.progres};
+    }
+    const kelRows = [...kelMap.values()].sort((a,b)=>a.kec.localeCompare(b.kec)||a.kel.localeCompare(b.kel)||a.tahun-b.tahun);
+    const kecMap = {};
+    for (const r of kelRows) {
+      if (!kecMap[r.kec]) kecMap[r.kec]={sum:0,cnt:0,rows:[]};
+      kecMap[r.kec].sum+=r.totalProg; kecMap[r.kec].cnt++; kecMap[r.kec].rows.push(r);
+    }
+    const catAvg = {};
+    for (const cn of CAT_NAMES) catAvg[cn]={sum:0,cnt:0};
+    for (const r of kelRows) for (const cn of CAT_NAMES){catAvg[cn].sum+=r.cats[cn]?.prog||0;catAvg[cn].cnt++;}
+
+    const sColor = v => v>=100?'#1E9E58':v>=75?'#1558A8':v>=50?'#F47B20':'#e63946';
+    const sLabel = v => v>=100?'Selesai':v>=75?'Baik':v>=50?'Sedang':'Rendah';
+    const totalKel=kelRows.length;
+    const globalAvg=kelRows.reduce((s,r)=>s+r.totalProg,0)/totalKel;
+    const jS=kelRows.filter(r=>r.totalProg>=100).length;
+    const jB=kelRows.filter(r=>r.totalProg>=75&&r.totalProg<100).length;
+    const jSd=kelRows.filter(r=>r.totalProg>=50&&r.totalProg<75).length;
+    const jR=kelRows.filter(r=>r.totalProg<50).length;
+
+    let logoSrc='';
+    try{logoSrc=document.querySelector('.sb-logo img').src;}catch(e){}
+
+    const W=1122;
+    const kecList=Object.keys(kecMap).sort();
+    const totalPages=1+kecList.length;
+
+    // ── Shared HTML blocks ──────────────────────────────────────
+    const pageHeader=()=>`
 <div style="background:linear-gradient(135deg,#1558A8 0%,#0d3d7a 100%);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:5px solid #F47B20">
   <div style="display:flex;align-items:center;gap:16px">
     ${logoSrc?`<img src="${logoSrc}" style="height:56px;width:auto;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))"/>`:''}
@@ -708,25 +1058,25 @@ async function downloadPDF() {
     const vBarSection=(items,chartH=180)=>{
       const maxV=Math.max(...items.map(x=>x.val),100);
       const scale=chartH/maxV;
-      const barW=Math.max(28,Math.min(60,Math.floor(640/items.length)-8));
+      const barW=Math.max(20,Math.min(50,Math.floor(600/items.length)-10));
       const gridLines=[0,25,50,75,100].map(pct=>{
         const bot=Math.round(pct*scale);
-        return `<div style="position:absolute;bottom:${bot}px;left:36px;right:0;border-top:1px dashed ${pct===100?'#1558A840':'#E4EAF2'};pointer-events:none">
-          <span style="position:absolute;left:-36px;top:-7px;color:#8A9DB8;font-size:10px;font-weight:600">${pct}%</span>
+        return `<div style="position:absolute;bottom:${bot}px;left:32px;right:8px;border-top:1px dashed ${pct===100?'#1558A820':'#E4EAF2'};pointer-events:none">
+          <span style="position:absolute;left:-32px;top:-7px;color:#8A9DB8;font-size:10px">${pct}%</span>
         </div>`;
       }).join('');
       const bars=items.map(({label,val,color})=>{
-        const h=Math.max(6,Math.round(val*scale));
-        return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;min-width:${barW}px;max-width:${barW+24}px">
-          <div style="color:${color};font-size:11px;font-weight:800;margin-bottom:5px;white-space:nowrap">${val.toFixed(1)}%</div>
-          <div style="width:${barW}px;height:${h}px;background:linear-gradient(180deg,${color}dd,${color});border-radius:5px 5px 0 0;box-shadow:0 3px 8px ${color}44;min-height:6px"></div>
-          <div style="color:#3D526B;font-size:10px;margin-top:7px;text-align:center;max-width:${barW+20}px;word-break:break-word;line-height:1.4">${label}</div>
+        const h=Math.max(3,Math.round(val*scale));
+        return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;min-width:${barW}px;max-width:${barW+20}px">
+          <div style="color:${color};font-size:11px;font-weight:800;margin-bottom:4px;white-space:nowrap">${val.toFixed(1)}%</div>
+          <div style="width:${barW}px;height:${h}px;background:${color};border-radius:6px 6px 0 0;box-shadow:0 2px 6px ${color}55;min-height:4px"></div>
+          <div style="color:#3D526B;font-size:10px;margin-top:6px;text-align:center;max-width:${barW+16}px;word-break:break-word;line-height:1.3">${label}</div>
         </div>`;
       }).join('');
-      return `<div style="position:relative;padding:20px 8px 0">
-        <div style="position:relative;height:${chartH}px;margin-left:36px;border-bottom:2px solid #CBD5E1">${gridLines}</div>
-        <div style="display:flex;align-items:flex-end;gap:6px;height:${chartH}px;margin-top:-${chartH}px;margin-left:36px">${bars}</div>
-      </div>`; 
+      return `<div style="position:relative;padding:0 8px">
+        <div style="position:relative;height:${chartH}px;margin-left:32px">${gridLines}</div>
+        <div style="display:flex;align-items:flex-end;gap:4px;height:${chartH}px;margin-top:-${chartH}px;margin-left:32px;padding-bottom:0">${bars}</div>
+      </div>`;
     };
 
     const legend=()=>`
@@ -814,8 +1164,16 @@ ${statCardsHtml}
       container.style.cssText='position:fixed;left:-9999px;top:0;z-index:-1;width:1122px;';
       container.innerHTML='';
       const imgData=canvas.toDataURL('image/jpeg',0.95);
+      const imgH=(canvas.height/canvas.width)*PW;
       if(pageIdx>0) doc.addPage();
-      doc.addImage(imgData,'JPEG',0,0,PW,PH);
+      // Fit to page height if needed
+      if(imgH<=PH){
+        doc.addImage(imgData,'JPEG',0,0,PW,imgH);
+      } else {
+        // Scale down to fit
+        const scale=PH/imgH;
+        doc.addImage(imgData,'JPEG',0,0,PW*scale,PH);
+      }
     };
 
     await renderPage(wrap(page1Content,1,totalPages),0);
@@ -829,20 +1187,7 @@ ${statCardsHtml}
       const kecAvg=kd.sum/kd.cnt;
       const kc=sColor(kecAvg);
 
-      // Kelompokkan per kelurahan (rata-rata semua tahun)
-      const kelGroupMap={};
-      for(const r of kd.rows){
-        if(!kelGroupMap[r.kel]) kelGroupMap[r.kel]={sum:0,cnt:0};
-        kelGroupMap[r.kel].sum+=r.totalProg;
-        kelGroupMap[r.kel].cnt++;
-      }
-      const uniqueKelNames=Object.keys(kelGroupMap).sort();
-      const kelBarItems2=uniqueKelNames.map(kn=>({
-        label:kn,
-        val:kelGroupMap[kn].sum/kelGroupMap[kn].cnt,
-        color:sColor(kelGroupMap[kn].sum/kelGroupMap[kn].cnt)
-      }));
-
+      const kelBarItems2=kd.rows.map(r=>({label:r.kel,val:r.totalProg,color:sColor(r.totalProg)}));
       const kecCatItems=CAT_NAMES.map(cn=>{
         let s=0,c2=0;
         for(const r of kd.rows){s+=r.cats[cn]?.prog||0;c2++;}
@@ -850,73 +1195,68 @@ ${statCardsHtml}
         return{label:cn,val:avg,color:sColor(avg)};
       });
 
-      // 6 stat cards — identik halaman 1
-      const kJS=kelBarItems2.filter(r=>r.val>=100).length;
-      const kJB=kelBarItems2.filter(r=>r.val>=75&&r.val<100).length;
-      const kJSd=kelBarItems2.filter(r=>r.val>=50&&r.val<75).length;
-      const kJR=kelBarItems2.filter(r=>r.val<50).length;
-      const kecStatCards=`
-<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px">
-  ${[
-    {v:uniqueKelNames.length,l:'Total Kelurahan',sub:'data tercatat',   c:'#1558A8'},
-    {v:kecAvg.toFixed(1)+'%',l:'Rata-rata Progres',sub:'kecamatan ini',c:'#F47B20'},
-    {v:kJS, l:'Selesai',sub:'Progres \u2265100%',c:'#1E9E58'},
-    {v:kJB, l:'Baik',   sub:'Progres 75\u201399%',c:'#1558A8'},
-    {v:kJSd,l:'Sedang', sub:'Progres 50\u201374%',c:'#F47B20'},
-    {v:kJR, l:'Rendah', sub:'Progres <50%',      c:'#e63946'},
-  ].map(i=>`
-    <div style="background:${i.c};border-radius:14px;padding:18px 12px;text-align:center;color:#fff;box-shadow:0 4px 14px ${i.c}55">
-      <div style="font-size:28px;font-weight:900;line-height:1">${i.v}</div>
-      <div style="font-size:12px;font-weight:700;margin-top:6px;opacity:.95">${i.l}</div>
-      <div style="font-size:10px;opacity:.75;margin-top:3px">${i.sub}</div>
-    </div>`).join('')}
+      // Kecamatan banner
+      const kecBanner=`
+<div style="background:linear-gradient(135deg,#0D1B2E,#15325A);border-radius:14px;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,.15)">
+  <div style="display:flex;align-items:center;gap:14px">
+    <div style="width:6px;height:48px;background:${kc};border-radius:4px"></div>
+    <div>
+      <div style="color:rgba(255,255,255,.6);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px">Laporan Detail</div>
+      <div style="color:#fff;font-size:20px;font-weight:900;margin-top:2px">Kecamatan ${kecName}</div>
+      <div style="color:rgba(255,255,255,.5);font-size:12px;margin-top:2px">${kd.cnt} kelurahan terdaftar</div>
+    </div>
+  </div>
+  <div style="background:${kc};border-radius:12px;padding:14px 24px;text-align:center;box-shadow:0 4px 14px ${kc}66">
+    <div style="color:#fff;font-size:26px;font-weight:900">${kecAvg.toFixed(1)}%</div>
+    <div style="color:rgba(255,255,255,.85);font-size:12px;font-weight:700;margin-top:2px">${sLabel(kecAvg)}</div>
+  </div>
 </div>`;
 
-      // Tabel detail
-      const sortedRows=[...kd.rows].sort((a,b)=>a.kel.localeCompare(b.kel)||a.tahun-b.tahun);
-      const tblRows=sortedRows.map((r,i)=>`
+      // Tabel kelurahan
+      const tblRows=kd.rows.map((r,i)=>`
 <tr style="background:${i%2===0?'#fff':'#F8FAFD'}">
-  <td style="padding:7px 10px;color:#8A9DB8;font-size:10px;text-align:center;border-right:1px solid #E4EAF2">${i+1}</td>
-  <td style="padding:7px 12px;font-weight:700;font-size:11px;border-right:1px solid #E4EAF2">${r.kel}</td>
-  <td style="padding:7px 8px;text-align:center;font-size:10px;color:#5A7290;border-right:1px solid #E4EAF2">${r.tahun}</td>
-  <td style="padding:7px 10px;text-align:right;font-size:10px;border-right:1px solid #E4EAF2">${r.totalPeng.toLocaleString('id')}</td>
-  <td style="padding:7px 10px;text-align:right;font-size:10px;border-right:1px solid #E4EAF2">${r.totalTgt.toLocaleString('id')}</td>
-  <td style="padding:7px 8px;text-align:center;font-weight:900;font-size:12px;color:${sColor(r.totalProg)};background:${sColor(r.totalProg)}15;border-right:1px solid #E4EAF2">${r.totalProg.toFixed(1)}%</td>
-  ${CAT_NAMES.map(cn=>`<td style="padding:7px 5px;text-align:center;font-size:9px;color:${sColor(r.cats[cn]?.prog||0)};font-weight:700;border-right:1px solid #F0F4F9">${(r.cats[cn]?.prog||0).toFixed(1)}%</td>`).join('')}
+  <td style="padding:8px 12px;color:#8A9DB8;font-size:11px;text-align:center;border-right:1px solid #E4EAF2">${i+1}</td>
+  <td style="padding:8px 14px;font-weight:700;font-size:12px;border-right:1px solid #E4EAF2">${r.kel}</td>
+  <td style="padding:8px 10px;text-align:center;font-size:11px;color:#5A7290;border-right:1px solid #E4EAF2">${r.tahun}</td>
+  <td style="padding:8px 12px;text-align:right;font-size:11px;border-right:1px solid #E4EAF2">${r.totalPeng.toLocaleString('id')}</td>
+  <td style="padding:8px 12px;text-align:right;font-size:11px;border-right:1px solid #E4EAF2">${r.totalTgt.toLocaleString('id')}</td>
+  <td style="padding:8px 10px;text-align:center;font-weight:900;font-size:13px;color:${sColor(r.totalProg)};background:${sColor(r.totalProg)}15;border-right:1px solid #E4EAF2">${r.totalProg.toFixed(1)}%</td>
+  ${CAT_NAMES.map(cn=>`<td style="padding:8px 6px;text-align:center;font-size:10px;color:${sColor(r.cats[cn]?.prog||0)};font-weight:700;border-right:1px solid #F0F4F9">${(r.cats[cn]?.prog||0).toFixed(1)}%</td>`).join('')}
 </tr>`).join('');
 
       const tabelDetail=`
-<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-top:16px">
+<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)">
   <div style="background:linear-gradient(90deg,#0D1B2E,#15325A);padding:12px 20px;display:flex;align-items:center;gap:10px">
     <div style="width:5px;height:22px;background:${kc};border-radius:3px"></div>
     <span style="color:#fff;font-size:14px;font-weight:800">Detail Data Kelurahan &mdash; Semua 10 Kategori</span>
   </div>
+  <div style="overflow-x:auto">
   <table style="width:100%;border-collapse:collapse">
     <thead>
       <tr style="background:#15325A">
-        <th style="padding:9px 10px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.1)">No</th>
-        <th style="padding:9px 12px;color:#fff;font-size:10px;font-weight:700;text-align:left;border-right:1px solid rgba(255,255,255,.1);min-width:110px">Kelurahan</th>
-        <th style="padding:9px 8px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.1)">Thn</th>
-        <th style="padding:9px 10px;color:#fff;font-size:10px;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.1);white-space:nowrap">Pengisian</th>
-        <th style="padding:9px 10px;color:#fff;font-size:10px;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.1);white-space:nowrap">Target</th>
-        <th style="padding:9px 8px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.1);background:#0D1B2E">Total %</th>
-        ${CAT_NAMES.map(cn=>`<th style="padding:9px 5px;color:#94B4D4;font-size:9px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,.07);white-space:nowrap">${cn}</th>`).join('')}
+        <th style="padding:10px 12px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid #1558A820;white-space:nowrap">No</th>
+        <th style="padding:10px 14px;color:#fff;font-size:10px;font-weight:700;text-align:left;border-right:1px solid #1558A820;min-width:120px">Kelurahan</th>
+        <th style="padding:10px 10px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid #1558A820">Thn</th>
+        <th style="padding:10px 12px;color:#fff;font-size:10px;font-weight:700;text-align:right;border-right:1px solid #1558A820;white-space:nowrap">Pengisian</th>
+        <th style="padding:10px 12px;color:#fff;font-size:10px;font-weight:700;text-align:right;border-right:1px solid #1558A820;white-space:nowrap">Target</th>
+        <th style="padding:10px 10px;color:#fff;font-size:10px;font-weight:700;text-align:center;border-right:1px solid #1558A820;white-space:nowrap;background:#0D1B2E">Total %</th>
+        ${CAT_NAMES.map(cn=>`<th style="padding:10px 6px;color:#94B4D4;font-size:9px;font-weight:700;text-align:center;border-right:1px solid #1558A820;white-space:nowrap">${cn}</th>`).join('')}
       </tr>
     </thead>
     <tbody>${tblRows}</tbody>
   </table>
+  </div>
 </div>`;
 
-      // Konten — struktur IDENTIK halaman 1
       const kecContent=`
-${kecStatCards}
-<div style="display:grid;grid-template-columns:3fr 2fr;gap:16px">
-  ${card('#F47B20',
-    cardTitle('Progres per Kelurahan','Rata-rata persentase progres tiap kelurahan','Diagram Batang','#1558A8')+
-    vBarSection(kelBarItems2,220)+legend()
+${kecBanner}
+<div style="display:grid;grid-template-columns:3fr 2fr;gap:16px;margin-bottom:16px">
+  ${card(kc,
+    cardTitle('Progres per Kelurahan','Persentase progres total tiap kelurahan di kecamatan ini','Bar Chart',kc)+
+    vBarSection(kelBarItems2,160)+legend()
   )}
-  ${card('#1E9E58',
-    cardTitle('Rata-rata per Kategori','Rata-rata progres berdasarkan kategori data','Horizontal Bar','#F47B20')+
+  ${card('#1558A8',
+    cardTitle('Rata-rata per Kategori','Rata-rata progres tiap kategori untuk kecamatan ini','Horizontal Bar','#F47B20')+
     hBarSection(kecCatItems)
   )}
 </div>
