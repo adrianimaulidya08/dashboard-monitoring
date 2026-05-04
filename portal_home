@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Dashboard Monitoring Progres Kelurahan – SDI Kota Palu</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#fdf6ee;
+  --bg2:#f7ede0;
+  --brown:#2c1206;
+  --brown2:#5c2a0e;
+  --amber:#b84d0e;
+  --amber-h:#9a3f0a;
+  --amber-l:#f0a96a;
+  --sidebar:#231008;
+  --muted:#8a5535;
+  --white:#fff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--brown);min-height:100vh;overflow-x:hidden}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:62px;
+  background:rgba(35,16,8,0.97);
+  backdrop-filter:blur(12px);
+  display:flex;align-items:center;gap:14px;
+  padding:0 32px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav-logo{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#d4691e,#f5b46a);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  box-shadow:0 0 0 3px rgba(212,105,30,.25);
+}
+.nav-txt strong{display:block;color:#fff;font-size:13.5px;font-weight:600;letter-spacing:.2px}
+.nav-txt span{display:block;color:#b07045;font-size:11px;margin-top:1px}
+.nav-spacer{flex:1}
+.nav-live{
+  font-size:11px;font-weight:600;
+  padding:5px 14px;border-radius:99px;
+  border:1px solid rgba(74,222,128,.3);
+  color:#4ade80;
+  display:flex;align-items:center;gap:6px;
+}
+.pulse{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;flex-shrink:0}
+
+/* LAYOUT */
+.wrap{display:flex;min-height:100vh;padding-top:62px}
+
+/* MAIN */
+.main{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:60px 48px;
+  position:relative;overflow:hidden;
+}
+.main-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 800px 600px at 30% 40%,rgba(240,169,106,.12),transparent),
+    radial-gradient(ellipse 500px 400px at 80% 80%,rgba(184,77,14,.07),transparent),
+    var(--bg);
+}
+.dot-grid{
+  position:absolute;top:24px;right:24px;
+  display:grid;grid-template-columns:repeat(6,1fr);gap:10px;
+  opacity:.18;pointer-events:none;
+}
+.dot-grid span{width:4px;height:4px;border-radius:50%;background:var(--amber);display:block}
+
+.hero{position:relative;z-index:1;max-width:580px;text-align:center;animation:fadeUp .8s ease both}
+
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--amber);border-radius:99px;
+  padding:7px 20px;font-size:12px;font-weight:600;
+  color:var(--amber);letter-spacing:.4px;text-transform:uppercase;
+  margin-bottom:28px;background:rgba(184,77,14,.07);
+}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite}
+
+.h-main{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(42px,5.5vw,64px);
+  line-height:1.1;color:var(--brown2);
+  font-weight:700;
+}
+.h-main em{font-style:normal;color:var(--amber)}
+
+.desc{
+  font-size:14.5px;line-height:1.8;color:var(--muted);
+  margin:22px auto 40px;max-width:450px;font-weight:300;
+}
+
+.btn-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--amber);color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14.5px;font-weight:600;
+  padding:15px 40px;border-radius:14px;
+  border:none;cursor:pointer;text-decoration:none;
+  transition:all .2s;
+  box-shadow:0 4px 24px rgba(184,77,14,.35),inset 0 1px 0 rgba(255,255,255,.15);
+}
+.btn-cta:hover{background:var(--amber-h);transform:translateY(-2px);box-shadow:0 8px 32px rgba(184,77,14,.45)}
+.btn-cta .arrow{transition:transform .2s}
+.btn-cta:hover .arrow{transform:translateX(4px)}
+
+.loc{
+  margin-top:28px;display:flex;align-items:center;justify-content:center;gap:7px;
+  font-size:12.5px;color:var(--muted);font-weight:500;
+}
+.loc-dot{width:7px;height:7px;border-radius:50%;background:#e05c30;flex-shrink:0}
+
+/* SIDEBAR */
+.sidebar{
+  width:280px;flex-shrink:0;
+  background:var(--sidebar);
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;
+  padding:48px 28px;position:relative;overflow:hidden;
+  animation:fadeLeft .8s .15s ease both;
+}
+.sb-glow1{position:absolute;top:-80px;right:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(184,77,14,.3),transparent 70%);pointer-events:none}
+.sb-glow2{position:absolute;bottom:-80px;left:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(184,77,14,.15),transparent 70%);pointer-events:none}
+.sb-grid{position:absolute;top:16px;right:16px;display:grid;grid-template-columns:repeat(4,1fr);gap:7px;opacity:.3;pointer-events:none}
+.sb-grid span{width:4px;height:4px;border-radius:50%;background:#f0a96a;display:block}
+
+.city-card{
+  position:relative;z-index:1;
+  width:100%;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);border-radius:20px;
+  padding:28px 20px;text-align:center;margin-bottom:28px;
+}
+.city-icon{
+  width:86px;height:86px;border-radius:22px;margin:0 auto 18px;
+  background:linear-gradient(145deg,#5bc8f0,#2e8fcc,#7ac5f0);
+  display:flex;align-items:center;justify-content:center;font-size:44px;
+  box-shadow:0 8px 28px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.city-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#fff;letter-spacing:.3px}
+.city-sub{font-size:12px;color:#7a4a2a;margin-top:4px;letter-spacing:.4px;text-transform:uppercase;font-weight:600}
+
+.sb-div{width:60%;height:1px;margin:0 auto 28px;background:linear-gradient(90deg,transparent,rgba(184,77,14,.6),transparent)}
+
+.stats{display:flex;width:100%;position:relative;z-index:1}
+.stat{flex:1;text-align:center;padding:0 10px;border-right:1px solid rgba(255,255,255,.06)}
+.stat:last-child{border-right:none}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:700;color:#fff;line-height:1}
+.stat-lbl{font-size:10px;color:#7a4a2a;margin-top:6px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeLeft{from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.5}}
+
+@media(max-width:800px){
+  .wrap{flex-direction:column}
+  .sidebar{width:100%;padding:32px 20px;justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">🏛️</div>
+  <div class="nav-txt">
+    <strong>Dashboard Monitoring Progres Kelurahan</strong>
+    <span>SDI Kota Palu</span>
+  </div>
+  <div class="nav-spacer"></div>
+  <div class="nav-live">
+    <div class="pulse"></div>
+    Live
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <main class="main">
+    <div class="main-bg"></div>
+    <div class="dot-grid">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="hero">
+      <div class="pill">
+        <div class="pill-dot"></div>
+        Sistem Informasi Real-time
+      </div>
+
+      <h1 class="h-main">
+        Dashboard Monitoring<br>
+        <em>Progres Kelurahan</em>
+      </h1>
+
+      <p class="desc">
+        Pantau perkembangan pengisian data kelurahan secara real-time. Data
+        diperbarui otomatis setiap 5 menit untuk memastikan informasi
+        selalu terkini dan akurat.
+      </p>
+
+      <a href="dashboard_monitoring.html" class="btn-cta">
+        Masuk ke Dashboard
+        <span class="arrow">→</span>
+      </a>
+
+      <div class="loc">
+        <div class="loc-dot"></div>
+        SDI Kota Palu, Sulawesi Tengah
+      </div>
+    </div>
+  </main>
+
+  <aside class="sidebar">
+    <div class="sb-glow1"></div>
+    <div class="sb-glow2"></div>
+    <div class="sb-grid">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="city-card">
+      <div class="city-icon">🏙️</div>
+      <div class="city-name">Kota Palu</div>
+      <div class="city-sub">Sulawesi Tengah</div>
+    </div>
+
+    <div class="sb-div"></div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-val" id="s1">0</div>
+        <div class="stat-lbl">Kelurahan</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="s2">0</div>
+        <div class="stat-lbl">Kecamatan</div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+function countUp(el,target,dur){
+  let v=0,step=target/60;
+  let t=setInterval(()=>{
+    v=Math.min(v+step,target);
+    el.textContent=Math.floor(v);
+    if(v>=target)clearInterval(t);
+  },dur/60);
+}
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    countUp(document.getElementById('s1'),46,800);
+    countUp(document.getElementById('s2'),8,700);
+  },400);
+});
+</script>
+</body>
+</html>
